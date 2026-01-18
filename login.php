@@ -5,9 +5,9 @@ require_once 'config.php';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $userID = trim($_POST['studentID']); // We use the same input box for all IDs
+    $userID = trim($_POST['studentID']); 
     $password = $_POST['password'];
-    $role = $_POST['role']; // Captures 'student', 'staff', or 'admin'
+    $role = $_POST['role']; // 'student', 'staff', 'admin'
 
     $db = get_db_connection();
     
@@ -28,9 +28,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = "Invalid Student ID or Password.";
         }
     } 
-    // --- 2. ADMIN LOGIN (New) ---
+    // --- 2. STAFF LOGIN (Enabled) ---
+    elseif ($role === 'staff') {
+        $stmt = $db->prepare("SELECT staffID, staffName FROM staff WHERE staffID = ?");
+        $stmt->bind_param("s", $userID);
+        $stmt->execute();
+        $user = $stmt->get_result()->fetch_assoc();
+
+        if ($user && $password === 'abc') {
+            $_SESSION['user_id'] = $user['staffID'];
+            $_SESSION['user_name'] = $user['staffName'];
+            $_SESSION['role'] = 'staff';
+            header("Location: staff-dashboard.php");
+            exit;
+        } else {
+            $error = "Invalid Staff ID or Password.";
+        }
+    }
+    // --- 3. ADMIN LOGIN ---
     elseif ($role === 'admin') {
-        // Check the 'admin' table you created
         $stmt = $db->prepare("SELECT adminID, adminName FROM admin WHERE adminID = ?");
         $stmt->bind_param("s", $userID);
         $stmt->execute();
@@ -40,18 +56,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user['adminID'];
             $_SESSION['user_name'] = $user['adminName'];
             $_SESSION['role'] = 'admin';
-            
-            // Redirect specifically to the Admin Console
             header("Location: manage-students.php");
             exit;
         } else {
             $error = "Invalid Admin ID or Password.";
         }
-    }
-    // --- 3. STAFF LOGIN (Placeholder) ---
-    elseif ($role === 'staff') {
-        // You can add staff logic here later if needed
-         $error = "Staff login is not set up yet.";
     }
 }
 ?>
@@ -87,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="form-group">
                 <label for="studentID">User ID</label>
-                <input type="text" id="studentID" name="studentID" placeholder="Enter your user ID." required autofocus>
+                <input type="text" id="studentID" name="studentID" placeholder="ID (e.g. 23WP..., STAFF01, ADMIN01)" required autofocus>
             </div>
 
             <div class="form-group">
