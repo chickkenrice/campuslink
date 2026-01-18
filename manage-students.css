@@ -1,5 +1,5 @@
 /* =========================================
-   1. THEME VARIABLES & RESET (From style.css)
+   1. THEME VARIABLES & RESET
    ========================================= */
 :root {
     --purple-base: #8056ff;
@@ -30,12 +30,14 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    padding: 42px 24px;
+    padding: 20px; /* Reduced body padding to give more space */
 }
 
 .app-bg {
     width: 100%;
-    max-width: 1280px;
+    /* FIX 1: Max-width increased to 100% to utilize full screen */
+    max-width: 100%; 
+    overflow: hidden; 
 }
 
 .main-card {
@@ -44,11 +46,11 @@ body {
     background: var(--white);
     border-radius: 34px;
     box-shadow: var(--card-shadow);
-    overflow: hidden;
+    overflow: hidden; 
 }
 
 /* =========================================
-   2. SIDEBAR STYLES (From style.css)
+   2. SIDEBAR STYLES
    ========================================= */
 .sidebar {
     background: var(--sidebar-gradient);
@@ -57,6 +59,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 36px;
+    min-width: var(--sidebar-width); 
 }
 
 .sidebar-head {
@@ -95,7 +98,7 @@ body {
     width: 100%;
     display: flex;
     align-items: center;
-    gap: 12px; /* Gap between icon and text */
+    gap: 12px;
     padding: 13px 16px;
     border-radius: 18px;
     border: none;
@@ -129,18 +132,18 @@ body {
 }
 
 /* =========================================
-   3. DASHBOARD MAIN LAYOUT (Merged Logic)
+   3. DASHBOARD MAIN LAYOUT
    ========================================= */
 .dashboard {
     background: var(--white);
-    padding: 42px 48px 50px;
+    padding: 30px 40px; /* Adjusted padding */
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 24px;
     
-    /* FIX: Critical for table scrolling */
     min-width: 0; 
     width: 100%;
+    overflow: hidden; 
 }
 
 .dashboard-topbar {
@@ -161,12 +164,13 @@ body {
     border: none;
     background: linear-gradient(135deg, var(--purple-base), var(--purple-soft));
     color: #fefefe;
-    padding: 10px 18px;
+    padding: 10px 24px;
     border-radius: 14px;
     font-weight: 600;
     cursor: pointer;
     box-shadow: 0 16px 32px rgba(128, 86, 255, 0.3);
     transition: transform 0.1s ease, box-shadow 0.15s ease;
+    white-space: nowrap;
 }
 
 .btn:hover {
@@ -175,92 +179,78 @@ body {
 }
 
 /* =========================================
-   4. CARD & TABLE STYLES (Merged Logic)
+   4. CARD & TABLE STYLES (UPDATED)
    ========================================= */
 .announcements-card {
     background: var(--white);
     border-radius: 26px;
-    padding: 30px 32px;
+    padding: 24px;
     box-shadow: var(--panel-shadow);
     display: flex;
     flex-direction: column;
-    gap: 18px;
     
-    /* FIX: Critical for table scrolling */
-    min-width: 0;
     width: 100%;
-}
-
-.announcements-header h2 {
-    margin: 0;
-    font-size: 22px;
-    color: var(--text-main);
+    height: 100%; /* Fill remaining space */
 }
 
 /* Container to handle overflow */
 .table-container {
     width: 100%;
-    overflow-x: auto;
-    margin-top: 10px;
+    
+    /* Calculate dynamic height so vertical scroll appears */
+    height: calc(100vh - 250px); 
+    
+    /* FIX 2: Only allow Vertical Scroll */
+    overflow-y: auto; 
+    overflow-x: hidden; 
+
     display: block;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 5px;
+    border-radius: 14px;
+    border: 1px solid rgba(202, 200, 240, 0.4);
+    background: var(--white);
 }
 
 /* The Table itself */
 .student-table {
     width: 100%;
-    min-width: 900px; /* Forces scroll on small screens */
-    border-collapse: separate;
-    border-spacing: 0 12px;
+    /* FIX 3: Remove min-width to prevent horizontal pushing */
+    min-width: auto; 
+    border-collapse: collapse;
 }
 
+/* Sticky Header */
 .student-table th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #f8f6ff;
+    
     text-align: left;
-    padding: 0 20px;
+    padding: 18px 20px;
     color: var(--text-muted);
     font-size: 13px;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     white-space: nowrap;
+    border-bottom: 2px solid rgba(202, 200, 240, 0.5);
 }
 
 .student-table td {
-    background: rgba(249, 247, 255, 0.95);
-    padding: 18px 20px;
-    border-top: 1px solid rgba(202, 200, 240, 0.5);
-    border-bottom: 1px solid rgba(202, 200, 240, 0.5);
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(202, 200, 240, 0.3);
     font-size: 14px;
-    white-space: nowrap;
-}
-
-/* Rounded corners for rows */
-.student-table tr td:first-child {
-    border-left: 1px solid rgba(202, 200, 240, 0.5);
-    border-radius: 18px 0 0 18px;
-}
-
-.student-table tr td:last-child {
-    border-right: 1px solid rgba(202, 200, 240, 0.5);
-    border-radius: 0 18px 18px 0;
-}
-
-/* Column Specifics */
-.id-cell {
-    font-weight: 700;
-    color: var(--purple-base);
-}
-
-.name-cell {
-    font-weight: 600;
     color: var(--text-main);
+    background: var(--white);
+    
+    /* Ensure text truncates if it's too long, preventing width explosion */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px; 
 }
 
-.badge-prog {
-    background: var(--purple-tint);
-    color: var(--purple-base);
-    padding: 6px 12px;
-    border-radius: 10px;
-    font-size: 12px;
-    font-weight: 700;
+/* Row Hover Effect */
+.student-table tbody tr:hover td {
+    background-color: #f9f8ff;
 }
