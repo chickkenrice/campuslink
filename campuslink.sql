@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 15, 2026 at 04:09 PM
+-- Generation Time: Jan 18, 2026 at 02:20 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,27 @@ SET time_zone = "+00:00";
 --
 -- Database: `campuslink`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin`
+--
+
+CREATE TABLE `admin` (
+  `adminID` varchar(12) NOT NULL,
+  `userID` varchar(12) DEFAULT NULL,
+  `adminName` varchar(100) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `contactNo` varchar(15) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`adminID`, `userID`, `adminName`, `email`, `contactNo`) VALUES
+('ADMIN01', 'ADMIN01', 'System Administrator', 'admin@campuslink.edu.my', '03-41450123');
 
 -- --------------------------------------------------------
 
@@ -41,6 +62,36 @@ CREATE TABLE `announcements` (
 INSERT INTO `announcements` (`id`, `title`, `body`, `created_at`) VALUES
 (1, 'Welcome back!', 'Classes resume next Monday. Please check your schedule.', '2025-11-10 13:15:47'),
 (2, 'Maintenance window', 'Portal downtime tonight from 11 PM to 12 AM for updates.', '2025-11-10 13:15:47');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `staff`
+--
+
+CREATE TABLE `staff` (
+  `staffID` varchar(12) NOT NULL,
+  `userID` varchar(12) DEFAULT NULL,
+  `staffName` varchar(100) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `department` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `staff`
+--
+
+INSERT INTO `staff` (`staffID`, `userID`, `staffName`, `email`, `department`) VALUES
+('STAFF01', 'STAFF01', 'Dr. Aini Musa', 'aini@tarc.edu.my', 'Academic Affairs'),
+('STAFF02', 'STAFF02', 'Mr. Tan Ah Kao', 'tanak@tarc.edu.my', 'IT Support'),
+('STAFF03', 'STAFF03', 'Ms. Sarah Lee', 'sarah@tarc.edu.my', 'Student Affairs'),
+('STAFF04', 'STAFF04', 'Prof. John Doe', 'john@tarc.edu.my', 'Computer Science'),
+('STAFF05', 'STAFF05', 'Mr. Lim Wei', 'limw@tarc.edu.my', 'Facilities Management'),
+('STAFF06', 'STAFF06', 'Ms. Priya K', 'priya@tarc.edu.my', 'Human Resources'),
+('STAFF07', 'STAFF07', 'Dr. Wong Siew', 'wong@tarc.edu.my', 'Research Centre'),
+('STAFF08', 'STAFF08', 'Mr. Ali Baba', 'ali@tarc.edu.my', 'Campus Security'),
+('STAFF10', 'STAFF10', 'Mr. David Teo', 'david@tarc.edu.my', 'Library'),
+('STAFF11', 'STAFF11', 'Ms. Pong Suk Fun', 'pongsf@tarc.edu.my', 'Information Technology');
 
 -- --------------------------------------------------------
 
@@ -159,17 +210,42 @@ INSERT INTO `users` (`userID`, `role`) VALUES
 ('23WP82670', 'Student'),
 ('23WP84917', 'Student'),
 ('23WP94665', 'Student'),
-('23WP96546', 'Student');
+('23WP96546', 'Student'),
+('ADMIN01', 'Admin'),
+('STAFF01', 'Staff'),
+('STAFF02', 'Staff'),
+('STAFF03', 'Staff'),
+('STAFF04', 'Staff'),
+('STAFF05', 'Staff'),
+('STAFF06', 'Staff'),
+('STAFF07', 'Staff'),
+('STAFF08', 'Staff'),
+('STAFF10', 'Staff'),
+('STAFF11', 'Staff');
 
 --
 -- Indexes for dumped tables
 --
 
 --
+-- Indexes for table `admin`
+--
+ALTER TABLE `admin`
+  ADD PRIMARY KEY (`adminID`),
+  ADD KEY `userID` (`userID`);
+
+--
 -- Indexes for table `announcements`
 --
 ALTER TABLE `announcements`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `staff`
+--
+ALTER TABLE `staff`
+  ADD PRIMARY KEY (`staffID`),
+  ADD KEY `userID` (`userID`);
 
 --
 -- Indexes for table `student`
@@ -199,10 +275,22 @@ ALTER TABLE `announcements`
 --
 
 --
+-- Constraints for table `admin`
+--
+ALTER TABLE `admin`
+  ADD CONSTRAINT `admin_fk_user` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `staff`
+--
+ALTER TABLE `staff`
+  ADD CONSTRAINT `staff_fk_user` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `student`
 --
 ALTER TABLE `student`
-  ADD CONSTRAINT `student_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`);
+  ADD CONSTRAINT `student_fk_user` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
