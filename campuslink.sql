@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 22, 2026 at 08:21 PM
+-- Generation Time: Jan 22, 2026 at 08:55 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -87,32 +87,18 @@ CREATE TABLE `class_schedule` (
 --
 
 INSERT INTO `class_schedule` (`scheduleID`, `programID`, `courseID`, `tutGroup`, `staffID`, `facilityID`, `day`, `startTime`, `endTime`, `classType`) VALUES
-(1, 'RSD', 'BACS2023', 'Group A', 'S004', 'DK-B', 'Monday', '08:00:00', '10:00:00', 'Lecture'),
-(2, 'RSD', 'BACS2023', 'Group A', 'S004', 'LAB-A01', 'Monday', '10:00:00', '11:00:00', 'Practical'),
-(3, 'RSD', 'BACS1013', 'Group A', 'S010', 'DK-B', 'Tuesday', '08:00:00', '10:00:00', 'Lecture'),
-(4, 'RSD', 'BACS1013', 'Group A', 'S010', 'LAB-A01', 'Tuesday', '10:00:00', '11:00:00', 'Practical'),
-(5, 'RSD', 'BACS1053', 'Group A', 'S011', 'DK-B', 'Wednesday', '08:00:00', '10:00:00', 'Lecture'),
-(6, 'RSD', 'BACS1053', 'Group A', 'S011', 'LAB-A01', 'Wednesday', '10:00:00', '11:00:00', 'Practical'),
-(7, 'RSD', 'BACS2063', 'Group A', 'S004', 'DK-B', 'Thursday', '08:00:00', '10:00:00', 'Lecture'),
-(8, 'RSD', 'BACS2063', 'Group A', 'S004', 'LAB-A01', 'Thursday', '10:00:00', '11:00:00', 'Practical'),
-(9, 'RSD', 'BACS2163', 'Group A', 'S001', 'DK-B', 'Friday', '08:00:00', '10:00:00', 'Lecture'),
-(10, 'RSD', 'BACS2163', 'Group A', 'S001', 'LAB-A01', 'Friday', '10:00:00', '11:00:00', 'Practical'),
-(11, 'RSW', 'BMCS1024', 'Group B', 'S012', 'DK-C', 'Monday', '13:00:00', '15:00:00', 'Lecture'),
-(12, 'RSW', 'BMCS1024', 'Group B', 'S012', 'LAB-B01', 'Monday', '15:00:00', '17:00:00', 'Practical'),
-(13, 'RSW', 'BMCS2073', 'Group B', 'S013', 'TR-101', 'Tuesday', '13:00:00', '15:00:00', 'Lecture'),
-(14, 'RSW', 'BMCS2073', 'Group B', 'S013', 'LAB-A02', 'Tuesday', '15:00:00', '16:00:00', 'Practical'),
-(15, 'RSW', 'BMSE3013', 'Group B', 'S012', 'LAB-A02', 'Wednesday', '13:00:00', '15:00:00', 'Lecture'),
-(16, 'RSW', 'BMSE3013', 'Group B', 'S012', 'LAB-A02', 'Wednesday', '15:00:00', '16:00:00', 'Practical'),
-(17, 'RSW', 'BAMS1623', 'Group B', 'S014', 'DK-A', 'Thursday', '13:00:00', '15:00:00', 'Lecture'),
-(18, 'RSW', 'BAMS1623', 'Group B', 'S014', 'TR-102', 'Thursday', '15:00:00', '16:00:00', 'Tutorial'),
-(19, 'RSW', 'BAIT2203', 'Group B', 'S010', 'LAB-B02', 'Friday', '14:00:00', '16:00:00', 'Lecture'),
-(20, 'RSW', 'BAIT2203', 'Group B', 'S010', 'LAB-B02', 'Friday', '16:00:00', '17:00:00', 'Practical'),
+(3, 'RSD', 'BACS1013', 'Group A', 'S010', 'DK-B', 'Thursday', '08:00:00', '10:00:00', 'Lecture'),
+(4, 'RSD', 'BACS1013', 'Group A', 'S010', 'LAB-A01', 'Thursday', '10:00:00', '11:00:00', 'Practical'),
 (21, 'RSW', 'BACS1013', 'Group B', 'S010', 'DK-C', 'Monday', '08:00:00', '10:00:00', 'Lecture'),
 (22, 'RSW', 'BACS1013', 'Group B', 'S010', 'LAB-A02', 'Monday', '10:00:00', '11:00:00', 'Practical'),
 (23, 'RSW', 'BJEL1713', 'Group B', 'S001', 'DK-C', 'Tuesday', '08:00:00', '10:00:00', 'Lecture'),
 (24, 'RSW', 'BJEL1713', 'Group B', 'S001', 'TR-101', 'Tuesday', '10:00:00', '11:00:00', 'Tutorial'),
 (25, 'RSW', 'MPU3103', 'Group B', 'S007', 'DK-C', 'Wednesday', '08:00:00', '10:00:00', 'Lecture'),
-(26, 'RSW', 'MPU3103', 'Group B', 'S007', 'TR-101', 'Wednesday', '10:00:00', '11:00:00', 'Tutorial');
+(26, 'RSW', 'MPU3103', 'Group B', 'S007', 'TR-101', 'Wednesday', '10:00:00', '11:00:00', 'Tutorial'),
+(27, 'RSD', 'BJEL1713', 'Group A', 'S001', 'DK-B', 'Friday', '08:00:00', '10:00:00', 'Lecture'),
+(28, 'RSD', 'BJEL1713', 'Group A', 'S001', 'TR-101', 'Friday', '10:00:00', '11:00:00', 'Tutorial'),
+(29, 'RSD', 'MPU3103', 'Group A', 'S007', 'DK-C', 'Monday', '14:00:00', '16:00:00', 'Lecture'),
+(30, 'RSD', 'MPU3103', 'Group A', 'S007', 'TR-102', 'Monday', '16:00:00', '17:00:00', 'Tutorial');
 
 -- --------------------------------------------------------
 
@@ -672,7 +658,7 @@ ALTER TABLE `announcements`
 -- AUTO_INCREMENT for table `class_schedule`
 --
 ALTER TABLE `class_schedule`
-  MODIFY `scheduleID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `scheduleID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `replacement_request`
