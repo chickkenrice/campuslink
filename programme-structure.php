@@ -25,7 +25,7 @@ if (!$progData) {
     die("Programme data not found. Please contact admin.");
 }
 
-$studentName = $progData['studentName']; // For Top Bar
+$studentName = $progData['studentName']; 
 $progID = $progData['programID'];     
 $progName = $progData['programName']; 
 $faculty = $progData['faculty'];      
@@ -59,119 +59,9 @@ while ($row = $result->fetch_assoc()) {
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/timetable.css">
-
-    <style>
-        .dashboard {
-            height: 100vh;
-            overflow-y: auto;
-            padding-bottom: 80px;
-        }
-
-        .structure-container {
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-            padding-bottom: 60px;
-        }
-        .year-section {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border: 1px solid #eee;
-        }
-        .year-header {
-            font-size: 18px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-        .semesters-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); 
-            gap: 25px;
-            align-items: stretch; 
-        }
-        .semester-block {
-            background: #fff;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .sem-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: #555;
-            background: #f9fafb;
-            padding: 12px 15px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        .course-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
-            flex-grow: 1; 
-        }
-        .course-table td {
-            padding: 10px 15px;
-            border-bottom: 1px solid #f0f0f0;
-            color: #444;
-            vertical-align: middle;
-        }
-        .code-col { font-weight: 600; color: #666; width: 85px; }
-        .name-col { font-weight: 500; }
-        .credit-col { text-align: center; width: 50px; color: #888; }
-        
-        .elective-section {
-            background: #fffbf0;
-            padding: 15px;
-            border-top: 1px dashed #e0e0e0;
-        }
-        .elective-header {
-            font-size: 11px;
-            font-weight: 700;
-            color: #d97706;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
-        }
-        .elective-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .elective-item {
-            font-size: 12px;
-            color: #555;
-            margin-bottom: 4px;
-            display: flex;
-            gap: 8px;
-        }
-        .elective-code {
-            font-weight: 600;
-            color: #d97706;
-            min-width: 70px;
-        }
-
-        .total-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 15px;
-            background: #fafafa;
-            border-top: 1px solid #e0e0e0;
-            font-size: 12px;
-            font-weight: 700;
-            color: #333;
-            margin-top: auto; 
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/programme.css">
 </head>
 <body>
 
@@ -256,7 +146,7 @@ while ($row = $result->fetch_assoc()) {
                             
                             <div class="semesters-grid">
                                 <?php foreach ($sems as $sem => $courses): 
-                                    // 1. Separate Core and Electives
+                                    // Logic for credits and electives
                                     $coreCourses = [];
                                     $techElectives = []; 
                                     $mpuElectives = [];  
@@ -273,22 +163,21 @@ while ($row = $result->fetch_assoc()) {
                                         }
                                     }
 
-                                    // 2. Logic to determine number of Tech Elective slots
-                                    // Default is 1, but for Year 3 Sem 2, we force 2 slots
                                     $techSlots = 1;
                                     if ($year == 3 && $sem == 2) {
                                         $techSlots = 2;
                                     }
 
-                                    // 3. Calculate Total Credits
                                     $semTotal = 0;
                                     foreach ($coreCourses as $c) $semTotal += $c['creditHours'];
                                     
+                                    $techCredit = 0;
                                     if (!empty($techElectives)) {
                                         $techCredit = $techElectives[0]['creditHours'];
                                         $semTotal += ($techCredit * $techSlots);
                                     }
 
+                                    $mpuCredit = 0;
                                     if (!empty($mpuElectives)) {
                                         $mpuCredit = $mpuElectives[0]['creditHours'];
                                         $semTotal += $mpuCredit;
@@ -395,7 +284,6 @@ while ($row = $result->fetch_assoc()) {
 </html>
 
 <?php
-// Helper to convert number to Roman numeral
 function toRoman($num) {
     $map = [1 => 'I', 2 => 'II', 3 => 'III'];
     return $map[$num] ?? $num;
