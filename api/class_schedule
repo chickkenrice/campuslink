@@ -1,0 +1,25 @@
+<?php
+header('Content-Type: application/json');
+require_once '../config.php';
+$db = get_db_connection();
+
+// Joins 4 tables to give readable data (e.g., "Dr. Aini" instead of "STAFF01")
+$sql = "SELECT s.scheduleID, s.day, s.startTime, s.endTime, s.classType, 
+               c.courseName, c.courseID, 
+               f.facilityName, f.location,
+               st.staffName 
+        FROM class_schedule s
+        JOIN course c ON s.courseID = c.courseID
+        JOIN facility f ON s.facilityID = f.facilityID
+        JOIN staff st ON s.staffID = st.staffID
+        ORDER BY FIELD(s.day, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'), s.startTime";
+
+$result = $db->query($sql);
+
+$data = [];
+while ($row = $result->fetch_assoc()) {
+    $data[] = $row;
+}
+
+echo json_encode(['status' => 'success', 'data' => $data]);
+?>

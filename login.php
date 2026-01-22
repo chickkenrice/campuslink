@@ -1,7 +1,6 @@
 <?php
 session_start();
-require_once 'config.php';
-
+require_once(__DIR__ . '/includes/config.php');
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -22,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user['studentID'];
             $_SESSION['user_name'] = $user['studentName'];
             $_SESSION['role'] = 'student';
-            header("Location: index.html");
+            header("Location: index.php");
             exit;
         } else {
             $error = "Invalid Student ID or Password.";

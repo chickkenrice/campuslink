@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once 'config.php';
-
+require_once(__DIR__ . '/includes/config.php');
+// =========================================================
 // 1. SECURITY CHECK
-// Only allow 'admin' role to access this page.
+// =========================================================
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: login.php");
     exit;
@@ -14,18 +14,17 @@ $activeTab = $_GET['tab'] ?? 'all';
 $message = '';
 
 // =========================================================
-// DATABASE OPERATIONS (This part updates your DB)
+// 2. DATABASE ACTIONS (POST)
 // =========================================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'];
-    
+
     // --- DELETE USER ---
     if ($action === 'delete') {
         $id = $_POST['id'];
-        // Because we set "ON DELETE CASCADE" in SQL, deleting the User 
-        // automatically deletes their profile in Student/Staff/Admin table.
         $stmt = $db->prepare("DELETE FROM users WHERE userID = ?");
         $stmt->bind_param("s", $id);
+        
         if ($stmt->execute()) {
             $message = "User $id has been deleted.";
         } else {
@@ -36,17 +35,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // --- CREATE USER ---
     elseif ($action === 'create') {
         $id = $_POST['id'];
-        $role = $_POST['role']; // Values: 'Student', 'Staff', 'Admin'
+        $role = $_POST['role'];
         $name = $_POST['name'];
         $email = $_POST['email'];
-        $extra = $_POST['extra'] ?? ''; // Holds Programme, Dept, or Phone
-        $group = $_POST['group'] ?? ''; // Only for Students
+        $extra = $_POST['extra'] ?? '';
+        $group = $_POST['group'] ?? '';
 
         // 1. Insert into Parent Table (USERS)
-        // We use INSERT IGNORE so if ID exists, we don't crash (but profile insert might fail)
         $db->query("INSERT IGNORE INTO users (userID, role) VALUES ('$id', '$role')");
 
-        // 2. Insert into Child Table (PROFILE)
+        // 2. Insert into Child Table
         if ($role === 'Student') {
             $stmt = $db->prepare("INSERT INTO student (studentID, userID, studentName, email, programme, tutGroup) VALUES (?, ?, ?, ?, ?, ?)");
             $stmt->bind_param("ssssss", $id, $id, $name, $email, $extra, $group);
@@ -74,7 +72,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $extra = $_POST['extra'] ?? '';
         $group = $_POST['group'] ?? '';
 
-        // Update the specific profile table based on role
         if ($role === 'Student') {
             $stmt = $db->prepare("UPDATE student SET studentName=?, email=?, programme=?, tutGroup=? WHERE studentID=?");
             $stmt->bind_param("sssss", $name, $email, $extra, $group, $id);
@@ -95,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // =========================================================
-// FETCH DATA FOR DISPLAY
+// 3. FETCH DATA (GET)
 // =========================================================
 if ($activeTab === 'student') {
     $sql = "SELECT studentID as id, studentName as name, email, 'Student' as role, programme as extra, tutGroup as grp FROM student ORDER BY name";
@@ -104,7 +101,7 @@ if ($activeTab === 'student') {
 } elseif ($activeTab === 'admin') {
     $sql = "SELECT adminID as id, adminName as name, email, 'Admin' as role, contactNo as extra, '' as grp FROM admin ORDER BY name";
 } else {
-    // 'ALL' TAB: Master Query combining all tables
+    // 'ALL' TAB
     $sql = "SELECT u.userID as id, u.role,
             COALESCE(s.studentName, st.staffName, a.adminName) as name,
             COALESCE(s.email, st.email, a.email) as email,
@@ -125,12 +122,12 @@ $result = $db->query($sql);
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin Console — Manage Users</title>
-    <link rel="stylesheet" href="styles.css">
+    
     <link rel="stylesheet" href="manage-students.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    
     <style>
-        /* Small internal overrides if needed */
         .tab-nav { display: flex; gap: 8px; margin-bottom: 25px; border-bottom: 2px solid #f0f0f0; padding-bottom: 12px; }
         .tab-btn { 
             padding: 8px 20px; border-radius: 20px; border: none; font-weight: 600; font-size: 14px;
@@ -140,7 +137,10 @@ $result = $db->query($sql);
         .tab-btn:hover { background: #f5f5ff; color: var(--purple-base); }
         .tab-btn.active { background: var(--purple-base); color: white; box-shadow: 0 4px 12px rgba(128,86,255,0.25); }
 
-        .action-btn { width: 32px; height: 32px; border-radius: 8px; border: none; cursor: pointer; color: white; display: inline-flex; align-items: center; justify-content: center; margin-right: 4px; transition: transform 0.1s; }
+        .action-btn { 
+            width: 32px; height: 32px; border-radius: 8px; border: none; cursor: pointer; color: white; 
+            display: inline-flex; align-items: center; justify-content: center; margin-right: 4px; transition: transform 0.1s; 
+        }
         .action-btn:hover { transform: translateY(-2px); }
         .btn-edit { background: #4a90e2; }
         .btn-delete { background: #ff5f73; }
@@ -158,8 +158,10 @@ $result = $db->query($sql);
     </style>
 </head>
 <body>
+
     <div class="app-bg">
         <div class="main-card">
+            
             <aside class="sidebar">
                 <div class="sidebar-head">
                     <div class="brand-icon">CL</div>
@@ -170,8 +172,24 @@ $result = $db->query($sql);
                 </div>
                 <nav class="sidebar-nav">
                     <ul>
-                        <li><a href="#" class="nav-item is-active"><span class="nav-icon"><i class="fa-solid fa-users-gear"></i></span> User Management</a></li>
-                        <li><a href="login.php" class="nav-item"><span class="nav-icon"><i class="fa-solid fa-arrow-right-from-bracket"></i></span> Logout</a></li>
+                        <li>
+                            <a href="#" class="nav-item is-active">
+                                <span class="nav-icon"><i class="fa-solid fa-users-gear"></i></span>
+                                <span class="nav-label">User Management</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="manage-timetable.php" class="nav-item">
+                                <span class="nav-icon"><i class="fa-solid fa-calendar-days"></i></span>
+                                <span class="nav-label">Timetable</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="login.php" class="nav-item">
+                                <span class="nav-icon"><i class="fa-solid fa-arrow-right-from-bracket"></i></span>
+                                <span class="nav-label">Logout</span>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
             </aside>
@@ -366,7 +384,7 @@ $result = $db->query($sql);
             document.getElementById('inpId').value = data.id;
             document.getElementById('inpId').readOnly = true; 
             document.getElementById('inpRole').value = data.role;
-            // document.getElementById('inpRole').disabled = true; // Optional: Lock role
+            // document.getElementById('inpRole').disabled = true; 
             
             document.getElementById('inpName').value = data.name;
             document.getElementById('inpEmail').value = data.email;
@@ -379,6 +397,7 @@ $result = $db->query($sql);
             modal.classList.remove('open');
         }
 
+        // Initialize fields on load
         toggleFields(); 
     </script>
 </body>

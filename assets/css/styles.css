@@ -31,24 +31,19 @@ body {
 	font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
 	background: var(--body-gradient);
 	color: var(--text-main);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	padding: 42px 24px;
+	
 }
 
 .app-bg {
 	width: 100%;
-	max-width: 1280px;
+	max-width: 100%;
 }
 
 .main-card {
-	display: grid;
-	grid-template-columns: var(--sidebar-width) 1fr;
-	background: var(--white);
-	border-radius: 34px;
-	box-shadow: var(--card-shadow);
-	overflow: hidden;
+	border-radius: 0; /* Removes curved outer corners */
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr;
 }
 
 /* Sidebar */
@@ -150,6 +145,7 @@ body {
 	mask-repeat: no-repeat;
 	mask-size: contain;
 	background: rgba(255, 255, 255, 0.95);
+    display: none; /* Add or change this line to display: none */
 }
 
 .icon-dashboard::after {
@@ -550,5 +546,3 @@ body {
 		grid-template-columns: 1fr;
 	}
 }
-
-

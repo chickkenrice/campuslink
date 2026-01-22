@@ -1,14 +1,16 @@
-<!doctype html>
+<?php
+// Future: restrict access after login. For now this page is standalone.
+?><!doctype html>
 <html lang="en">
+
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>CAMPUSLink — Dashboard</title>
+	<title>CAMPUSLink — Staff Dashboard</title>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
-	<link rel="stylesheet" href="./styles.css?v=20241113">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 	<style>
 		:root {
 			--purple-base: #8056ff;
@@ -36,37 +38,37 @@
 			height: 100%;
 		}
 
-	body {
+		body {
 			margin: 0;
 			font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
 			background: var(--body-gradient);
 			color: var(--text-main);
-	}
-
-	.app-bg {
-		width: 100%;
-		max-width: 100%;
 		}
 
-.main-card {
-	display: grid;
-	grid-template-columns: var(--sidebar-width) 1fr;
-	background: var(--white);
-	box-shadow: var(--card-shadow);
-	overflow: hidden;
-		min-height: 100vh;
-		width: 100%;
-}
+		.app-bg {
+			width: 100%;
+			max-width: 100%;
+		}
 
-.sidebar {
-	background: var(--sidebar-gradient);
-	color: rgba(255, 255, 255, 0.95);
-	padding: 38px 28px;
-	display: flex;
-	flex-direction: column;
-	gap: 36px;
-		min-height: 100vh;
-}
+		.main-card {
+			display: grid;
+			grid-template-columns: var(--sidebar-width) 1fr;
+			background: var(--white);
+			box-shadow: var(--card-shadow);
+			overflow: hidden;
+			min-height: 100vh;
+			width: 100%;
+		}
+
+		.sidebar {
+			background: var(--sidebar-gradient);
+			color: rgba(255, 255, 255, 0.95);
+			padding: 38px 28px;
+			display: flex;
+			flex-direction: column;
+			gap: 36px;
+			min-height: 100vh;
+		}
 
 		.sidebar-head {
 			display: flex;
@@ -146,7 +148,6 @@
 			background: rgba(255, 255, 255, 0.2);
 			display: grid;
 			place-items: center;
-			position: relative;
 			color: rgba(255, 255, 255, 0.95);
 			font-size: 16px;
 		}
@@ -155,56 +156,13 @@
 			line-height: 1;
 		}
 
-		.nav-icon::after {
-			display: none;
-		}
-
-		.nav-chevron {
-			width: 14px;
-			height: 14px;
-			position: relative;
-		}
-
 		.nav-chevron::after {
 			content: "";
-			position: absolute;
-			inset: 0;
+			width: 14px;
+			height: 14px;
 			mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='m8.12 9.29 3.88 3.88 3.88-3.88 1.42 1.42L12 16l-5.3-5.29 1.42-1.42Z'/%3E%3C/svg%3E") center/contain no-repeat;
 			background: rgba(255, 255, 255, 0.75);
-			transform: rotate(-90deg);
-			transition: transform 0.2s ease;
-		}
-
-		.nav-group.is-open .nav-chevron::after {
-			transform: rotate(0deg);
-		}
-
-		.nav-submenu {
-			display: none;
-			flex-direction: column;
-			gap: 8px;
-			margin: 6px 0 0 12px;
-		}
-
-		.nav-group.is-open .nav-submenu {
-			display: flex;
-		}
-
-		.nav-subitem {
-			font: inherit;
-			padding: 10px 14px;
-			border-radius: 14px;
-			background: rgba(255, 255, 255, 0.16);
-			color: rgba(255, 255, 255, 0.85);
-			border: none;
-			cursor: pointer;
-			text-align: left;
-			transition: background-color 0.2s ease, transform 0.12s ease;
-		}
-
-		.nav-subitem:hover {
-			background: rgba(255, 255, 255, 0.28);
-			transform: translateX(4px);
+			display: block;
 		}
 
 		.dashboard {
@@ -386,122 +344,88 @@
 			color: rgba(255, 255, 255, 0.85);
 		}
 
-		.announcements-card {
+		.metrics-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+			gap: 18px;
+		}
+
+		.metric-card {
+			border-radius: 20px;
+			padding: 18px 20px;
+			background: rgba(248, 246, 255, 0.95);
+			border: 1px solid rgba(202, 200, 240, 0.9);
+			box-shadow: 0 14px 32px rgba(76, 62, 156, 0.12);
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+		}
+
+		.metric-card.primary {
+			background: linear-gradient(135deg, var(--purple-base), var(--purple-soft));
+			color: #fff;
+			border: none;
+		}
+
+		.metric-label {
+			margin: 0;
+			font-size: 14px;
+			color: inherit;
+		}
+
+		.metric-value {
+			margin: 0;
+			font-size: 30px;
+			font-weight: 700;
+			color: inherit;
+		}
+
+		.metric-sub {
+			font-size: 13px;
+			color: inherit;
+		}
+
+		.deadlines-card {
 			background: var(--white);
 			border-radius: 26px;
 			padding: 30px 32px;
 			box-shadow: var(--panel-shadow);
 			display: flex;
 			flex-direction: column;
-			gap: 18px;
+			gap: 16px;
 		}
 
-		.announcements-header {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-		}
-
-		.announcements-header h2 {
+		.deadline-list {
+			list-style: none;
 			margin: 0;
-			font-size: 22px;
-			color: var(--text-main);
-		}
-
-		.announcements-header .actions {
-			display: flex;
-			align-items: center;
-			gap: 14px;
-		}
-
-		.see-all {
-			color: var(--purple-base);
-			font-weight: 600;
-			text-decoration: none;
-		}
-
-		.see-all:hover {
-			color: var(--purple-soft);
-		}
-
-		.announcements {
+			padding: 0;
 			display: flex;
 			flex-direction: column;
-			gap: 16px;
-			min-height: 200px;
-		}
-
-		.announcement {
-			display: grid;
-			grid-template-columns: 1fr auto;
 			gap: 12px;
-			padding: 18px 20px;
-			border-radius: 18px;
-			background: rgba(249, 247, 255, 0.95);
-			border: 1px solid rgba(202, 200, 240, 0.85);
 		}
 
-		.announcement-title {
+		.deadline-item {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 14px 18px;
+			border-radius: 16px;
+			background: rgba(249, 247, 255, 0.95);
+			border: 1px solid rgba(206, 204, 244, 0.8);
+		}
+
+		.deadline-label {
 			margin: 0;
 			font-weight: 600;
 			color: var(--text-main);
 		}
 
-		.announcement-meta {
-			margin: 0;
+		.deadline-date {
 			font-size: 13px;
-			color: rgba(109, 110, 156, 0.8);
-			display: flex;
-			align-items: center;
-			gap: 6px;
-		}
-
-		.announcement-meta::before {
-			content: "";
-			width: 16px;
-			height: 16px;
-			mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M7 2a1 1 0 0 0-1 1v2H5a3 3 0 0 0-3 3v11a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3h-1V3a1 1 0 1 0-2 0v2H8V3a1 1 0 0 0-1-1Zm0 7h2v3H7V9Zm4 0h2v3h-2V9Zm4 0h2v3h-2V9Z'/%3E%3C/svg%3E") center/contain no-repeat;
-			background: rgba(109, 110, 156, 0.8);
-		}
-
-		.announcement-body {
-			grid-column: 1 / -1;
-			margin: 0;
-			color: rgba(66, 70, 110, 0.82);
-		}
-
-		.hint {
-			margin: 0;
 			color: var(--text-sub);
 		}
 
-		.btn {
-			appearance: none;
-			border: none;
-			background: linear-gradient(135deg, var(--purple-base), var(--purple-soft));
-			color: #ffffff;
-			padding: 10px 18px;
-			border-radius: 14px;
-			font-weight: 600;
-			cursor: pointer;
-			box-shadow: 0 16px 32px rgba(128, 86, 255, 0.3);
-			transition: transform 0.1s ease, box-shadow 0.15s ease;
-		}
-
-		.btn:hover {
-			transform: translateY(-2px);
-			box-shadow: 0 20px 36px rgba(128, 86, 255, 0.35);
-		}
-
-		.btn:active {
-			transform: translateY(0);
-		}
-
-		@media (max-width: 1100px) {
-			body {
-				padding: 28px 18px;
-			}
-
+		@media (max-width: 900px) {
 			.main-card {
 				grid-template-columns: 1fr;
 			}
@@ -509,21 +433,21 @@
 			.sidebar {
 				flex-direction: row;
 				align-items: center;
-				gap: 24px;
-				padding: 30px;
+				gap: 18px;
+				padding: 24px;
 			}
 
 			.sidebar-nav ul {
 				flex-direction: row;
-				gap: 18px;
+				gap: 16px;
+			}
+
+			.metrics-grid {
+				grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
 			}
 		}
 
-		@media (max-width: 768px) {
-			body {
-				padding: 18px;
-			}
-
+		@media (max-width: 640px) {
 			.sidebar {
 				flex-direction: column;
 				align-items: stretch;
@@ -540,102 +464,142 @@
 			.dashboard-topbar {
 				flex-direction: column;
 				align-items: stretch;
-				gap: 18px;
 			}
 
-			.announcement {
-				grid-template-columns: 1fr;
+			.deadline-item {
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 6px;
 			}
 		}
 	</style>
 </head>
+
 <body>
 	<div class="app-bg">
 		<div class="main-card">
-			<aside class="sidebar" aria-label="Primary navigation">
+			<aside class="sidebar" aria-label="Staff navigation">
 				<div class="sidebar-head">
 					<div class="brand-icon">CL</div>
 					<div class="brand-text">
 						<span class="brand-name">CAMPUSLink</span>
-						<span class="brand-tagline">Student Portal</span>
+						<span class="brand-tagline">Staff Console</span>
 					</div>
 				</div>
 				<nav class="sidebar-nav">
 					<ul>
 						<li>
 							<button class="nav-item is-active" type="button">
-								<span class="nav-icon icon-dashboard" aria-hidden="true"><i class="fa-solid fa-table-columns"></i></span>
+								<span class="nav-icon" aria-hidden="true"><i
+										class="fa-solid fa-table-columns"></i></span>
 								<span class="nav-label">Dashboard</span>
 							</button>
 						</li>
-						<li class="nav-group is-open" data-expandable>
-							<button class="nav-item nav-toggle" type="button" data-target="programme-panel" aria-expanded="true">
-								<span class="nav-icon icon-programme" aria-hidden="true"><i class="fa-solid fa-clipboard-list"></i></span>
-								<span class="nav-label">Programme</span>
+						<li>
+							<button class="nav-item" type="button">
+								<span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-id-badge"></i></span>
+								<span class="nav-label">Student Profile</span>
 								<span class="nav-chevron" aria-hidden="true"></span>
 							</button>
-							<div class="nav-submenu" id="programme-panel">
-								<button class="nav-subitem" type="button">Bachelor of IT</button>
-								<button class="nav-subitem" type="button">Diploma in Multimedia</button>
-								<button class="nav-subitem" type="button">Foundation Studies</button>
-							</div>
 						</li>
-						<li class="nav-group" data-expandable>
-							<button class="nav-item nav-toggle" type="button" data-target="examination-panel" aria-expanded="false">
-								<span class="nav-icon icon-exam" aria-hidden="true"><i class="fa-solid fa-book"></i></span>
-								<span class="nav-label">Examination</span>
+						<li>
+							<button class="nav-item" type="button">
+								<span class="nav-icon" aria-hidden="true"><i
+										class="fa-solid fa-calendar-check"></i></span>
+								<span class="nav-label">Attendance</span>
 								<span class="nav-chevron" aria-hidden="true"></span>
 							</button>
-							<div class="nav-submenu" id="examination-panel" hidden>
-								<button class="nav-subitem" type="button">Mid-term Schedule</button>
-								<button class="nav-subitem" type="button">Final Exam Slots</button>
-								<button class="nav-subitem" type="button">Results Archive</button>
-							</div>
+						</li>
+						<li>
+							<button class="nav-item" type="button">
+								<span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-book-open"></i></span>
+								<span class="nav-label">Assignments</span>
+								<span class="nav-chevron" aria-hidden="true"></span>
+							</button>
+						</li>
+						<li>
+							<a href="staff-timetable.php" class="nav-item">
+								<i class="fa-solid fa-calendar-week"></i> My Timetable
+							</a>
+						</li>
+						<li>
+							<a href="logout.php" class="nav-item">
+								<i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+							</a>
 						</li>
 					</ul>
 				</nav>
 			</aside>
 
-			<main class="dashboard" aria-label="Dashboard">
+			<main class="dashboard" aria-label="Staff dashboard">
 				<header class="dashboard-topbar">
 					<div class="search-box">
-						<label class="sr-only" for="dashboard-search">Search</label>
-						<input id="dashboard-search" type="search" placeholder="Search" autocomplete="off">
-						<span id="currentDate" class="sr-only"></span>
+						<label class="sr-only" for="staff-search">Search</label>
+						<input id="staff-search" type="search" placeholder="Search" autocomplete="off">
 					</div>
 					<div class="topbar-right">
 						<button class="icon-btn" type="button" aria-label="Notifications">
 							<span class="icon-bell" aria-hidden="true"></span>
 							<span class="badge"></span>
 						</button>
-						<a class="switch-link" href="./staff-dashboard.php">Staff Portal</a>
+						<a class="switch-link" href="./index.html">Student Portal</a>
 						<div class="user-card">
-							<div class="user-meta">
-								<span class="user-name">John Doe</span>
-								<span class="user-status">3rd Year Student</span>
-							</div>
+							<span class="user-name">Dr. Aini Musa</span>
+							<span class="user-status">Academic Affairs</span>
 						</div>
 					</div>
 				</header>
 
 				<section class="welcome-card">
 					<div class="welcome-details">
-						<p class="welcome-date" id="welcomeDate">September 4, 2025</p>
-						<h1 class="welcome-title">Welcome back, Alex!</h1>
-						<p class="welcome-text">Always stay updated in your student portal.</p>
+						<p class="welcome-date">November 13, 2025</p>
+						<h1 class="welcome-title">Good afternoon, Dr. Aini!</h1>
+						<p class="welcome-text">Here is an overview of your classes, students, and pending deadlines.
+						</p>
 					</div>
 				</section>
 
-				<section class="announcements-card">
+				<section class="metrics-grid">
+					<article class="metric-card primary">
+						<p class="metric-label">Total Students</p>
+						<p class="metric-value">1,240</p>
+						<span class="metric-sub">+12 vs last week</span>
+					</article>
+					<article class="metric-card">
+						<p class="metric-label">Total Classes</p>
+						<p class="metric-value">42</p>
+						<span class="metric-sub">6 running today</span>
+					</article>
+					<article class="metric-card">
+						<p class="metric-label">Upcoming Deadlines</p>
+						<p class="metric-value">5</p>
+						<span class="metric-sub">3 due this week</span>
+					</article>
+				</section>
+
+				<section class="deadlines-card">
 					<header class="announcements-header">
-						<h2>Announcements</h2>
+						<h2>Upcoming Deadlines</h2>
 						<div class="actions">
-							<button id="refreshBtn" class="btn" type="button" aria-label="Refresh announcements">Refresh</button>
-							<a class="see-all" href="#">See all</a>
+							<a class="see-all" href="#">View calendar</a>
 						</div>
 					</header>
-					<div id="announcements" class="announcements" aria-live="polite"></div>
-					<p class="hint">No announcements yet. Content will appear here once connected to the database.</p>
+					<ul class="deadline-list">
+						<li class="deadline-item">
+							<p class="deadline-label">Submit mid-term grades</p>
+							<span class="deadline-date">Nov 15, 2025</span>
+						</li>
+						<li class="deadline-item">
+							<p class="deadline-label">CS101 assignment review</p>
+							<span class="deadline-date">Nov 17, 2025</span>
+						</li>
+						<li class="deadline-item">
+							<p class="deadline-label">Faculty meeting agenda</p>
+							<span class="deadline-date">Nov 20, 2025</span>
+						</li>
+					</ul>
+					<p class="hint">These deadlines are placeholders. Connect to your staff database to populate live
+						data.</p>
 				</section>
 			</main>
 		</div>
@@ -643,6 +607,5 @@
 
 	<script src="./script.js"></script>
 </body>
+
 </html>
-
-
