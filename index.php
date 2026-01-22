@@ -1,9 +1,8 @@
 <?php
 session_start();
-require_once(__DIR__ . '/includes/config.php'); // Ensure correct path to config
+require_once(__DIR__ . '/includes/config.php'); 
 
 // 1. SECURITY CHECK
-// Ensure user is logged in AND is a Student (case-insensitive check)
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || strcasecmp($_SESSION['role'], 'student') !== 0) {
     header("Location: login.php");
     exit;
@@ -13,8 +12,7 @@ $userID = $_SESSION['user_id'];
 $db = get_db_connection();
 
 // 2. FETCH STUDENT DETAILS
-// We use the studentID (which is the userID) to get the specific details
-$stmt = $db->prepare("SELECT studentName, tutGroup, programme FROM student WHERE studentID = ?");
+$stmt = $db->prepare("SELECT studentName, tutGroup, programID FROM student WHERE studentID = ?");
 $stmt->bind_param("s", $userID);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -22,15 +20,13 @@ $result = $stmt->get_result();
 if ($row = $result->fetch_assoc()) {
     $fullName = $row['studentName'];
     $tutGroup = $row['tutGroup'];
-    $programme = $row['programme'];
+    $programme = $row['programID']; 
 } else {
-    // Fallback if not found in student table
     $fullName = $_SESSION['user_name'] ?? 'Student';
     $tutGroup = 'N/A';
     $programme = 'N/A';
 }
 
-// Prepare first name for welcome message
 $firstName = explode(' ', trim($fullName))[0];
 
 // 3. FETCH ANNOUNCEMENTS
@@ -52,14 +48,9 @@ $announcements = $db->query($ann_sql);
     <link rel="stylesheet" href="assets/css/styles.css">
     
     <style>
-        /* Extra styles for announcements */
         .announcement-item {
-            background: #fff;
-            border: 1px solid #eee;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            border-left: 4px solid #6c5ce7;
+            background: #fff; border: 1px solid #eee; padding: 15px;
+            margin-bottom: 10px; border-radius: 8px; border-left: 4px solid #6c5ce7;
         }
         .ann-date { font-size: 0.8rem; color: #888; margin-bottom: 4px; display:block; }
         .ann-title { font-weight: 700; color: #333; margin-bottom: 6px; display:block; font-size: 1rem; }
@@ -101,6 +92,7 @@ $announcements = $db->query($ann_sql);
                                 <span class="nav-chevron"></span>
                             </button>
                             <div class="nav-submenu" id="programme-panel" hidden>
+                                <a href="programme-structure.php" class="nav-subitem">Programme Structure</a>
                                 <a href="#" class="nav-subitem">Course Enrollment</a>
                                 <a href="#" class="nav-subitem">Results</a>
                             </div>
@@ -137,19 +129,17 @@ $announcements = $db->query($ann_sql);
                     
                     <div class="topbar-right">
                         <div class="user-card" style="display: flex; align-items: center; gap: 12px; flex-direction: row-reverse;">
-                            <a href="student-profile.php" class="profile-link" title="View Profile">
-                                <div class="profile-pic" style="width: 42px; height: 42px; border-radius: 50%; background: #e0e7ff; display: grid; place-items: center; border: 2px solid #c7d2fe; overflow: hidden;">
-                                    <i class="fa-solid fa-user" style="color: #4f46e5; font-size: 18px;"></i>
+                            <a href="student-profile.php" class="profile-link" title="View Profile" style="text-decoration: none; cursor: pointer;">
+                                <div class="profile-pic" style="width: 42px; height: 42px; border-radius: 50%; background: var(--purple-tint); display: grid; place-items: center; border: 2px solid var(--purple-soft); overflow: hidden;">
+                                    <i class="fa-solid fa-user" style="color: var(--purple-base); font-size: 18px;"></i>
                                 </div>
                             </a>
 
                             <div class="user-meta" style="text-align: right;">
-                                <span class="user-name" style="display: block; font-weight: 600; color: #333;">
+                                <span class="user-name" style="display: block; font-weight: 600; color: var(--text-main);">
                                     <?php echo htmlspecialchars($fullName); ?>
                                 </span>
-                                <span class="user-status" style="font-size: 12px; color: #666;">
-                                    <?php echo htmlspecialchars($programme . " | " . $tutGroup); ?>
-                                </span>
+                                <span class="user-status" style="font-size: 12px; color: var(--text-sub);">Student</span>
                             </div>
                         </div>
                     </div>
@@ -202,17 +192,13 @@ $announcements = $db->query($ann_sql);
                 const targetPanel = document.getElementById(targetId);
                 const isExpanded = btn.getAttribute('aria-expanded') === 'true';
                 
-                // Toggle visibility
-                targetPanel.hidden = isExpanded;
-                btn.setAttribute('aria-expanded', !isExpanded);
-                
-                // Toggle arrow rotation if you have CSS for .is-open
-                btn.parentElement.classList.toggle('is-open', !isExpanded);
+                if (targetPanel) {
+                    targetPanel.hidden = isExpanded;
+                    btn.setAttribute('aria-expanded', !isExpanded);
+                    btn.parentElement.classList.toggle('is-open', !isExpanded);
+                }
             });
         });
-        
-        // Simple Date Script
-        // document.getElementById('welcomeDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     </script>
 </body>
 </html>

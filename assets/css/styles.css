@@ -43,7 +43,7 @@ body {
 	border-radius: 0; /* Removes curved outer corners */
     min-height: 100vh;
     display: grid;
-    grid-template-columns: var(--sidebar-width) 1fr;
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
 }
 
 /* Sidebar */
@@ -100,19 +100,20 @@ body {
 }
 
 .nav-item {
-	width: 100%;
-	display: grid;
-	grid-template-columns: auto 1fr auto;
-	align-items: center;
-	padding: 13px 16px;
-	border-radius: 18px;
-	border: none;
-	background: transparent;
-	color: inherit;
-	font-size: 15px;
-	font-weight: 600;
-	cursor: pointer;
-	transition: background-color 0.2s ease, transform 0.12s ease;
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px;  /* <--- THIS ADDS THE SPACE BETWEEN ICON AND TEXT */
+    padding: 13px 16px;
+    border-radius: 18px;
+    border: none;
+    background: transparent;
+    color: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.12s ease;
 }
 
 .nav-item:hover,
@@ -316,6 +317,18 @@ body {
 .user-status {
 	font-size: 12px;
 	color: var(--text-sub);
+}
+
+.profile-pic {
+    width: 42px; 
+    height: 42px; 
+    border-radius: 50%;
+    background: #e0e7ff; 
+    display: grid; 
+    place-items: center;
+    border: 2px solid #c7d2fe; 
+    color: var(--purple-base);
+    overflow: hidden;
 }
 
 /* Hero section */

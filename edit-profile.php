@@ -55,7 +55,7 @@ $student = $stmt->get_result()->fetch_assoc();
     <meta charset="utf-8">
     <title>Edit Profile — CAMPUSLink</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="assets/css/styles.css">
     <style>
         .edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -98,7 +98,7 @@ $student = $stmt->get_result()->fetch_assoc();
                             </div>
                             <div class="form-group">
                                 <label>Programme</label>
-                                <input type="text" value="<?php echo $student['programme']; ?>" readonly>
+                                <input type="text" value="<?php echo $student['programID']; ?>" readonly>
                             </div>
                         </div>
 

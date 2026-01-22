@@ -13,19 +13,16 @@ $userID = $_SESSION['user_id'];
 $db = get_db_connection();
 
 // 2. GET STUDENT INFO
-// Added 'programme' to the SELECT list
-$stmt = $db->prepare("SELECT studentName, tutGroup, programme FROM student WHERE studentID = ?");
+$stmt = $db->prepare("SELECT studentName, tutGroup, programID FROM student WHERE studentID = ?");
 $stmt->bind_param("s", $userID);
 $stmt->execute();
 $student = $stmt->get_result()->fetch_assoc();
 
 $studentName = $student['studentName'] ?? 'Student';
 $myGroup = $student['tutGroup'] ?? 'Unassigned';
-// Get the program ID (e.g. 'RSD', 'RSW')
-$myProgram = $student['programme'] ?? '';
+$myProgram = $student['programID'] ?? '';
 
 // 3. FETCH SCHEDULE DATA
-// Added 'AND cs.programID = ?' to the WHERE clause
 $sql = "SELECT * FROM class_schedule cs
         JOIN course c ON cs.courseID = c.courseID
         JOIN facility f ON cs.facilityID = f.facilityID
@@ -34,31 +31,54 @@ $sql = "SELECT * FROM class_schedule cs
         AND cs.programID = ?"; 
 
 $stmt = $db->prepare($sql);
-// Bind both the Group (string) and Program (string)
 $stmt->bind_param("ss", $myGroup, $myProgram);
+$stmt->execute();
+$result = $stmt->get_result();
 
-// 4. BUILD SCHEDULE MATRIX
+// =============================================================
+// 4. BUILD 30-MINUTE SCHEDULE MATRIX
+// =============================================================
+$startHour = 8;
+$endHour = 18;
+$totalSlots = ($endHour - $startHour) * 2;
 $scheduleMatrix = [];
+
 while ($row = $result->fetch_assoc()) {
     $day = $row['day'];
-    $startHour = (int)date('G', strtotime($row['startTime']));
-    $endHour   = (int)date('G', strtotime($row['endTime']));
-    $duration  = $endHour - $startHour;
-
-    $scheduleMatrix[$day][$startHour] = [
-        'info' => $row,
-        'duration' => $duration
-    ];
     
-    // Mark covered hours
-    for ($i = 1; $i < $duration; $i++) {
-        $scheduleMatrix[$day][$startHour + $i] = 'occupied';
+    // Parse Start Time
+    list($sH, $sM) = explode(':', $row['startTime']);
+    $startIndex = (($sH - $startHour) * 2) + ($sM == '30' ? 1 : 0);
+
+    // Parse End Time
+    list($eH, $eM) = explode(':', $row['endTime']);
+    $endIndex = (($eH - $startHour) * 2) + ($eM == '30' ? 1 : 0);
+
+    $durationSlots = $endIndex - $startIndex;
+
+    if ($durationSlots <= 0 || $startIndex < 0 || $endIndex > $totalSlots) continue;
+
+    $isBlocked = false;
+    for ($i = 0; $i < $durationSlots; $i++) {
+        if (isset($scheduleMatrix[$day][$startIndex + $i])) {
+            $isBlocked = true;
+            break;
+        }
+    }
+
+    if (!$isBlocked) {
+        $scheduleMatrix[$day][$startIndex] = [
+            'info' => $row,
+            'colspan' => $durationSlots
+        ];
+        
+        for ($i = 1; $i < $durationSlots; $i++) {
+            $scheduleMatrix[$day][$startIndex + $i] = 'occupied';
+        }
     }
 }
 
 $daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-$startOfDay = 8; // 8 AM
-$endOfDay   = 18; // 6 PM
 ?>
 
 <!doctype html>
@@ -73,252 +93,163 @@ $endOfDay   = 18; // 6 PM
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/timetable.css">
+    
     <style>
-        /* CORE VARIABLES */
-        :root {
-            --purple-base: #8056ff;
-            --sidebar-gradient: linear-gradient(200deg, #8f5dff 0%, #6c44f6 100%);
-            --body-bg: #f5f7fa;
-            --text-main: #181b2f;
+        /* Extra styles for Course Name inside block */
+        .subject-name {
+            font-size: 9px;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 3px;
+            line-height: 1.1;
+            opacity: 0.95;
+            white-space: nowrap; 
+            overflow: hidden;
+            text-overflow: ellipsis; /* Adds ... if text is too long */
+            max-width: 100%;
         }
-
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background: var(--body-bg);
-            color: var(--text-main);
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* LAYOUT STRUCTURE */
-        .app-layout {
-            display: flex;
-            width: 100%;
-            padding: 20px;
-            gap: 20px;
-        }
-
-        /* SIDEBAR */
-        .sidebar {
-            width: 260px;
-            background: var(--sidebar-gradient);
-            border-radius: 24px;
-            padding: 30px;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-            height: calc(100vh - 40px);
-            position: sticky;
-            top: 20px;
-        }
-
-        .brand-block {
-            display: flex; align-items: center; gap: 12px; margin-bottom: 40px;
-        }
-        .brand-logo {
-            width: 48px; height: 48px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 12px;
-            display: grid; place-items: center; font-weight: 700;
-        }
-        .nav-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
-        .nav-item {
-            display: flex; align-items: center; gap: 12px;
-            padding: 12px 16px;
-            text-decoration: none;
-            color: rgba(255,255,255,0.7);
-            font-weight: 600;
-            border-radius: 14px;
-            transition: 0.2s;
-        }
-        .nav-item:hover, .nav-item.is-active {
-            background: rgba(255,255,255,0.2);
-            color: white;
-        }
-
-        /* MAIN DASHBOARD AREA */
-        .main-content {
-            flex: 1;
-            background: white;
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
-            overflow: hidden; /* Prevent body scroll if table scrolls */
-        }
-
-        .header-row {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;
-        }
-
-        /* TIMETABLE GRID SYSTEM */
-        .timetable-wrapper {
-            overflow-x: auto;
-            border-radius: 12px;
-            border: 1px solid #eee;
-        }
-
-        table.timetable {
-            width: 100%;
-            border-collapse: collapse; /* Removes double borders */
-            min-width: 1200px; /* Ensures width on small screens */
-            table-layout: fixed; /* STRICT alignment */
-        }
-
-        /* HEADERS */
-        .timetable thead th {
-            background: #f9fafb;
-            color: #666;
-            font-size: 13px;
-            font-weight: 700;
-            padding: 12px;
-            border-bottom: 2px solid #eee;
-            border-right: 1px solid #f0f0f0;
-            text-transform: uppercase;
-        }
-
-        /* DAY COLUMN */
-        .day-column {
-            width: 100px;
-            background: #fff;
-            color: var(--purple-base);
-            font-weight: 700;
-            text-align: center;
-            border-right: 2px solid #eee;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        /* SLOTS */
-        .time-slot {
-            border-bottom: 1px solid #f0f0f0;
-            border-right: 1px solid #f0f0f0;
-            height: 100px;
-            padding: 0; /* REMOVED PADDING to fix alignment */
-            vertical-align: top;
-            position: relative;
-        }
-        
-        .time-slot.empty:hover {
-            background-color: #fafafa;
-        }
-
-        /* CLASS BLOCK */
-        .class-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: white;
-            padding: 5px;
-            /* Small margin to simulate grid gap without breaking alignment */
-            border: 1px solid white; 
-            box-sizing: border-box;
-            border-radius: 6px;
-        }
-
-        .is-Lecture { background-color: #4CAF50; }
-        .is-Practical { background-color: #6c5ce7; }
-
-        .subject-code { font-weight: 800; font-size: 13px; margin-bottom: 4px; display: block; }
-        .subject-loc { font-size: 11px; font-weight: 600; display: block; opacity: 0.9; }
-        .subject-prof { font-size: 10px; font-style: italic; opacity: 0.8; margin-top: 2px; display: block; }
-
     </style>
 </head>
 <body>
 
-<div class="app-layout">
-    
-    <aside class="sidebar">
-        <div class="brand-block">
-            <div class="brand-logo">CL</div>
-            <div style="line-height:1.2">
-                <div style="font-weight:700; font-size:18px;">CAMPUSLink</div>
-                <div style="font-size:12px; opacity:0.7;">Student Portal</div>
+<div class="app-bg">
+    <div class="main-card">
+        
+        <aside class="sidebar" aria-label="Primary navigation">
+            <div class="sidebar-head">
+                <div class="brand-icon">CL</div>
+                <div class="brand-text">
+                    <span class="brand-name">CAMPUSLink</span>
+                    <span class="brand-tagline">Student Portal</span>
+                </div>
             </div>
-        </div>
-        <ul class="nav-list">
-            <li><a href="index.php" class="nav-item"><i class="fa-solid fa-table-columns"></i> Dashboard</a></li>
-            <li><a href="#" class="nav-item is-active"><i class="fa-solid fa-calendar-days"></i> My Timetable</a></li>
-            <li><a href="logout.php" class="nav-item" style="color: #ffcccc;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a></li>
-        </ul>
-    </aside>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="index.php" class="nav-item"><span class="nav-icon"><i class="fa-solid fa-table-columns"></i></span> Dashboard</a></li>
+                    <li><a href="student-timetable.php" class="nav-item is-active"><span class="nav-icon"><i class="fa-solid fa-calendar-days"></i></span> My Timetable</a></li>
+                    <li class="nav-group" data-expandable>
+                        <button class="nav-item nav-toggle" type="button" data-target="programme-panel">
+                            <span class="nav-icon"><i class="fa-solid fa-clipboard-list"></i></span>
+                            <span class="nav-label">Programme</span>
+                            <span class="nav-chevron"></span>
+                        </button>
+                        <div class="nav-submenu" id="programme-panel" hidden>
+                            <a href="programme-structure.php" class="nav-subitem">Programme Structure</a>
+                            <a href="#" class="nav-subitem">Course Enrollment</a>
+                            <a href="#" class="nav-subitem">Results</a>
+                        </div>
+                    </li>
+                    <li class="nav-group" data-expandable>
+                        <button class="nav-item nav-toggle" type="button" data-target="examination-panel">
+                            <span class="nav-icon"><i class="fa-solid fa-book"></i></span>
+                            <span class="nav-label">Examination</span>
+                            <span class="nav-chevron"></span>
+                        </button>
+                        <div class="nav-submenu" id="examination-panel" hidden>
+                            <a href="#" class="nav-subitem">Exam Slip</a>
+                            <a href="#" class="nav-subitem">Exam Schedule</a>
+                        </div>
+                    </li>
+                    <li><a href="logout.php" class="nav-item" style="color: #e74c3c; margin-top: 20px;"><span class="nav-icon"><i class="fa-solid fa-arrow-right-from-bracket"></i></span> Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
 
-    <main class="main-content">
-        <div class="header-row">
-            <div>
-                <h1 style="margin:0; font-size:24px;">Weekly Schedule</h1>
-                <p style="margin:5px 0 0; color:#888; font-size:14px;">
-                    Group: <strong style="color:var(--purple-base);"><?php echo htmlspecialchars($myGroup); ?></strong>
-                </p>
-            </div>
-            <div style="text-align:right;">
-                <div style="font-weight:700;"><?php echo htmlspecialchars($studentName); ?></div>
-                <div style="font-size:12px; color:#999;">Student ID: <?php echo htmlspecialchars($userID); ?></div>
-            </div>
-        </div>
+        <main class="dashboard">
+            <header class="dashboard-topbar">
+                <div>
+                    <h1 class="welcome-title">My Timetable</h1>
+                    <p style="color: var(--text-sub); font-size: 14px; margin-top: 5px;">
+                        Viewing schedule for: <strong style="color: var(--purple-base);"><?php echo htmlspecialchars($myProgram . " - " . $myGroup); ?></strong>
+                    </p>
+                </div>
+                
+                <div class="topbar-right">
+                    <div class="user-card" style="display: flex; align-items: center; gap: 12px; flex-direction: row-reverse;">
+                        <a href="student-profile.php" class="profile-link" title="View Profile">
+                            <div class="profile-pic" style="width: 42px; height: 42px; border-radius: 50%; background: #e0e7ff; display: grid; place-items: center; border: 2px solid #c7d2fe; overflow: hidden;">
+                                <i class="fa-solid fa-user" style="color: #4f46e5; font-size: 18px;"></i>
+                            </div>
+                        </a>
+                        <div class="user-meta" style="text-align: right;">
+                            <span class="user-name" style="display: block; font-weight: 600; color: #333;"><?php echo htmlspecialchars($studentName); ?></span>
+                            <span class="user-status" style="font-size: 12px; color: #666;">Student</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
 
-        <div class="timetable-wrapper">
-            <table class="timetable">
-                <thead>
-                    <tr>
-                        <th style="width: 80px;">Day</th>
-                        <?php for ($h = $startOfDay; $h < $endOfDay; $h++): ?>
-                            <th>
-                                <?php echo sprintf("%02d:00", $h); ?>
-                            </th>
-                        <?php endfor; ?>
-                    </tr>
-                </thead>
+            <section class="timetable-card">
+                <div class="timetable-wrapper">
+                    <table class="timetable">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">Day</th>
+                                <?php for ($h = $startHour; $h < $endHour; $h++): ?>
+                                    <th colspan="2">
+                                        <?php echo sprintf("%02d:00 - %02d:00", $h, $h+1); ?>
+                                    </th>
+                                <?php endfor; ?>
+                            </tr>
+                        </thead>
 
-                <tbody>
-                    <?php foreach ($daysOfWeek as $day): ?>
-                        <tr>
-                            <td class="day-column">
-                                <?php echo substr($day, 0, 3); ?>
-                            </td>
+                        <tbody>
+                            <?php foreach ($daysOfWeek as $day): ?>
+                                <tr>
+                                    <td class="day-column"><?php echo substr($day, 0, 3); ?></td>
 
-                            <?php 
-                            for ($h = $startOfDay; $h < $endOfDay; $h++) {
-                                
-                                if (isset($scheduleMatrix[$day][$h])) {
-                                    $slot = $scheduleMatrix[$day][$h];
+                                    <?php 
+                                    for ($i = 0; $i < $totalSlots; $i++) {
+                                        if (isset($scheduleMatrix[$day][$i])) {
+                                            $slot = $scheduleMatrix[$day][$i];
+                                            if ($slot === 'occupied') continue;
 
-                                    // If part of a previous span, skip rendering
-                                    if ($slot === 'occupied') continue;
+                                            $colspan = $slot['colspan'];
+                                            $info = $slot['info'];
+                                            $typeClass = 'is-' . ($info['classType'] ?? 'Lecture');
 
-                                    $dur = $slot['duration'];
-                                    $info = $slot['info'];
-                                    $typeClass = 'is-' . ($info['classType'] ?? 'Lecture');
-
-                                    // Render Merged Cell
-                                    echo "<td colspan='$dur' class='time-slot'>";
-                                        echo "<div class='class-container $typeClass'>";
-                                            $suffix = ($info['classType'] == 'Lecture') ? '(L)' : '(P)';
-                                            echo "<span class='subject-code'>{$info['courseID']} $suffix</span>";
-                                            echo "<span class='subject-loc'>{$info['facilityID']}</span>";
-                                            echo "<span class='subject-prof'>{$info['staffName']}</span>";
-                                        echo "</div>";
-                                    echo "</td>";
-
-                                } else {
-                                    // Empty Cell
-                                    echo "<td class='time-slot empty'></td>";
-                                }
-                            }
-                            ?>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-    </main>
-
+                                            echo "<td colspan='$colspan' class='time-slot'>";
+                                                echo "<div class='class-container $typeClass'>";
+                                                    // FIX: Display Course Name below Code
+                                                    $suffix = ($info['classType'] == 'Lecture') ? '(L)' : '(P)';
+                                                    echo "<span class='subject-code'>{$info['courseID']} $suffix</span>";
+                                                    echo "<span class='subject-name'>{$info['courseName']}</span>";
+                                                    echo "<span class='subject-loc'><i class='fa-solid fa-location-dot'></i> {$info['facilityID']}</span>";
+                                                    echo "<span class='subject-prof'>{$info['staffName']}</span>";
+                                                echo "</div>";
+                                            echo "</td>";
+                                        } else {
+                                            echo "<td class='time-slot empty'></td>";
+                                        }
+                                    }
+                                    ?>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
 </div>
+
+<script>
+    document.querySelectorAll('.nav-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-target');
+            const targetPanel = document.getElementById(targetId);
+            const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+            
+            if (targetPanel) {
+                targetPanel.hidden = isExpanded;
+                btn.setAttribute('aria-expanded', !isExpanded);
+                btn.parentElement.classList.toggle('is-open', !isExpanded);
+            }
+        });
+    });
+</script>
 
 </body>
 </html>

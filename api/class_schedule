@@ -1,9 +1,12 @@
 <?php
 header('Content-Type: application/json');
-require_once '../config.php';
+require_once '../includes/config.php';
 $db = get_db_connection();
 
-// Joins 4 tables to give readable data (e.g., "Dr. Aini" instead of "STAFF01")
+// Capture filters from URL (e.g., ?group=Group A&program=RSD)
+$group = $_GET['group'] ?? '';
+$program = $_GET['program'] ?? '';
+
 $sql = "SELECT s.scheduleID, s.day, s.startTime, s.endTime, s.classType, 
                c.courseName, c.courseID, 
                f.facilityName, f.location,
@@ -12,14 +15,31 @@ $sql = "SELECT s.scheduleID, s.day, s.startTime, s.endTime, s.classType,
         JOIN course c ON s.courseID = c.courseID
         JOIN facility f ON s.facilityID = f.facilityID
         JOIN staff st ON s.staffID = st.staffID
-        ORDER BY FIELD(s.day, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'), s.startTime";
+        WHERE 1=1"; // Dummy clause to make appending easier
 
-$result = $db->query($sql);
+$params = [];
+$types = "";
 
-$data = [];
-while ($row = $result->fetch_assoc()) {
-    $data[] = $row;
+if ($group) {
+    $sql .= " AND s.tutGroup = ?";
+    $params[] = $group;
+    $types .= "s";
 }
 
-echo json_encode(['status' => 'success', 'data' => $data]);
+if ($program) {
+    $sql .= " AND s.programID = ?";
+    $params[] = $program;
+    $types .= "s";
+}
+
+$sql .= " ORDER BY FIELD(s.day, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'), s.startTime";
+
+$stmt = $db->prepare($sql);
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
+}
+$stmt->execute();
+$result = $stmt->get_result();
+
+echo json_encode(['status' => 'success', 'data' => $result->fetch_all(MYSQLI_ASSOC)]);
 ?>
