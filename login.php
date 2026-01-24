@@ -3,13 +3,22 @@ session_start();
 require_once(__DIR__ . '/includes/config.php');
 $error = '';
 
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $userID = trim($_POST['studentID']); 
+    $userID = '';
+    if (isset($_POST['studentID'])) {
+        $userID = trim($_POST['studentID']);
+    } elseif (isset($_POST['staffID'])) {
+        $userID = trim($_POST['staffID']);
+    } elseif (isset($_POST['adminID'])) {
+        $userID = trim($_POST['adminID']);
+    }
+    
     $password = $_POST['password'];
-    $role = $_POST['role']; // 'student', 'staff', 'admin'
+    $role = $_POST['role']; 
 
     $db = get_db_connection();
-    
+        
     // --- 1. STUDENT LOGIN ---
     if ($role === 'student') {
         $stmt = $db->prepare("SELECT studentID, studentName FROM student WHERE studentID = ?");
@@ -38,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user['staffID'];
             $_SESSION['user_name'] = $user['staffName'];
             $_SESSION['role'] = 'staff';
-            header("Location: staff-dashboard.php");
+            header("Location: staff/staff-dashboard.php");
             exit;
         } else {
             $error = "Invalid Staff ID or Password.";
@@ -55,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user['adminID'];
             $_SESSION['user_name'] = $user['adminName'];
             $_SESSION['role'] = 'admin';
-            header("Location: manage-students.php");
+            header("Location: admin/manage-students.php");
             exit;
         } else {
             $error = "Invalid Admin ID or Password.";

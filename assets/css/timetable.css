@@ -28,9 +28,25 @@
 table.timetable {
     width: 100%;
     border-collapse: collapse;
-    /* Reduced width for smaller 30-min slots */
-    min-width: 1300px; 
+    /* min-width: 1300px; */ 
     table-layout: fixed;
+}
+
+/* Reduce header font size to fit narrower columns */
+.timetable thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #f9fafb;
+    color: var(--text-sub);
+    font-size: 10px; /* Reduced from 11px */
+    font-weight: 700;
+    padding: 10px 2px; /* Reduced padding */
+    border-bottom: 2px solid #eee;
+    border-right: 1px solid #f0f0f0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
 }
 
 /* =========================================

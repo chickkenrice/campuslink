@@ -1,11 +1,12 @@
 <?php
 session_start();
-require_once(__DIR__ . '/includes/config.php');
+require_once(__DIR__ . '/../includes/config.php');
+
 // =========================================================
 // 1. SECURITY CHECK
 // =========================================================
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit;
 }
 
@@ -21,12 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // --- DELETE USER ---
     if ($action === 'delete') {
-        $id = $_POST['id'];
+        $uid = $_POST['uid']; 
         $stmt = $db->prepare("DELETE FROM users WHERE userID = ?");
-        $stmt->bind_param("s", $id);
+        $stmt->bind_param("s", $uid);
         
         if ($stmt->execute()) {
-            $message = "User $id has been deleted.";
+            $message = "User has been deleted.";
         } else {
             $message = "Error deleting user: " . $db->error;
         }
@@ -34,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // --- CREATE USER ---
     elseif ($action === 'create') {
-        $id = $_POST['id'];
+        $id = $_POST['id']; 
         $role = $_POST['role'];
         $name = $_POST['name'];
         $email = $_POST['email'];
@@ -46,26 +47,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // 2. Insert into Child Table
         if ($role === 'Student') {
-            $stmt = $db->prepare("INSERT INTO student (studentID, userID, studentName, email, programme, tutGroup) VALUES (?, ?, ?, ?, ?, ?)");
+            // FIX: Changed 'programme' to 'programID'
+            $stmt = $db->prepare("INSERT INTO student (studentID, userID, studentName, email, programID, tutGroup) VALUES (?, ?, ?, ?, ?, ?)");
             $stmt->bind_param("ssssss", $id, $id, $name, $email, $extra, $group);
         } elseif ($role === 'Staff') {
-            $stmt = $db->prepare("INSERT INTO staff (staffID, userID, staffName, email, department) VALUES (?, ?, ?, ?, ?)");
+            // FIX: Changed 'department' to 'staffType'
+            $stmt = $db->prepare("INSERT INTO staff (staffID, userID, staffName, email, staffType) VALUES (?, ?, ?, ?, ?)");
             $stmt->bind_param("sssss", $id, $id, $name, $email, $extra);
         } elseif ($role === 'Admin') {
             $stmt = $db->prepare("INSERT INTO admin (adminID, userID, adminName, email, contactNo) VALUES (?, ?, ?, ?, ?)");
             $stmt->bind_param("sssss", $id, $id, $name, $email, $extra);
         }
 
-        if (isset($stmt) && $stmt->execute()) {
-            $message = "New $role added successfully.";
-        } else {
-            $message = "Error adding user (ID might already exist).";
+        if (isset($stmt)) {
+            try {
+                if ($stmt->execute()) {
+                    $message = "New $role added successfully.";
+                } else {
+                    $message = "Error adding details: " . $stmt->error;
+                }
+            } catch (Exception $e) {
+                $message = "Error: ID likely already exists.";
+            }
         }
     }
 
     // --- UPDATE USER ---
     elseif ($action === 'update') {
-        $id = $_POST['id'];
+        $id = $_POST['id']; 
         $role = $_POST['role'];
         $name = $_POST['name'];
         $email = $_POST['email'];
@@ -73,10 +82,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $group = $_POST['group'] ?? '';
 
         if ($role === 'Student') {
-            $stmt = $db->prepare("UPDATE student SET studentName=?, email=?, programme=?, tutGroup=? WHERE studentID=?");
+            // FIX: Changed 'programme' to 'programID'
+            $stmt = $db->prepare("UPDATE student SET studentName=?, email=?, programID=?, tutGroup=? WHERE studentID=?");
             $stmt->bind_param("sssss", $name, $email, $extra, $group, $id);
         } elseif ($role === 'Staff') {
-            $stmt = $db->prepare("UPDATE staff SET staffName=?, email=?, department=? WHERE staffID=?");
+            // FIX: Changed 'department' to 'staffType'
+            $stmt = $db->prepare("UPDATE staff SET staffName=?, email=?, staffType=? WHERE staffID=?");
             $stmt->bind_param("ssss", $name, $email, $extra, $id);
         } elseif ($role === 'Admin') {
             $stmt = $db->prepare("UPDATE admin SET adminName=?, email=?, contactNo=? WHERE adminID=?");
@@ -95,18 +106,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // 3. FETCH DATA (GET)
 // =========================================================
 if ($activeTab === 'student') {
-    $sql = "SELECT studentID as id, studentName as name, email, 'Student' as role, programme as extra, tutGroup as grp FROM student ORDER BY name";
+    // FIX: 'programme' -> 'programID'
+    $sql = "SELECT studentID as childID, userID, studentName as name, email, 'Student' as role, programID as extra, tutGroup as grp FROM student ORDER BY name";
 } elseif ($activeTab === 'staff') {
-    $sql = "SELECT staffID as id, staffName as name, email, 'Staff' as role, department as extra, '' as grp FROM staff ORDER BY name";
+    // FIX: 'department' -> 'staffType'
+    $sql = "SELECT staffID as childID, userID, staffName as name, email, 'Staff' as role, staffType as extra, '' as grp FROM staff ORDER BY name";
 } elseif ($activeTab === 'admin') {
-    $sql = "SELECT adminID as id, adminName as name, email, 'Admin' as role, contactNo as extra, '' as grp FROM admin ORDER BY name";
+    $sql = "SELECT adminID as childID, userID, adminName as name, email, 'Admin' as role, contactNo as extra, '' as grp FROM admin ORDER BY name";
 } else {
     // 'ALL' TAB
-    $sql = "SELECT u.userID as id, u.role,
+    // FIX: 'programme' -> 'programID' AND 'department' -> 'staffType'
+    $sql = "SELECT u.userID, u.role,
             COALESCE(s.studentName, st.staffName, a.adminName) as name,
             COALESCE(s.email, st.email, a.email) as email,
-            COALESCE(s.programme, st.department, a.contactNo) as extra,
-            COALESCE(s.tutGroup, '') as grp
+            COALESCE(s.programID, st.staffType, a.contactNo) as extra,
+            COALESCE(s.tutGroup, '') as grp,
+            COALESCE(s.studentID, st.staffID, a.adminID) as childID
             FROM users u
             LEFT JOIN student s ON u.userID = s.userID
             LEFT JOIN staff st ON u.userID = st.userID
@@ -123,19 +138,19 @@ $result = $db->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Admin Console — Manage Users</title>
     
-    <link rel="stylesheet" href="manage-students.css">
+    <link rel="stylesheet" href="../assets/css/manage-students.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         .tab-nav { display: flex; gap: 8px; margin-bottom: 25px; border-bottom: 2px solid #f0f0f0; padding-bottom: 12px; }
         .tab-btn { 
             padding: 8px 20px; border-radius: 20px; border: none; font-weight: 600; font-size: 14px;
-            cursor: pointer; text-decoration: none; color: var(--text-sub); background: transparent; 
+            cursor: pointer; text-decoration: none; color: #666; background: transparent; 
             transition: all 0.2s;
         }
-        .tab-btn:hover { background: #f5f5ff; color: var(--purple-base); }
-        .tab-btn.active { background: var(--purple-base); color: white; box-shadow: 0 4px 12px rgba(128,86,255,0.25); }
+        .tab-btn:hover { background: #f5f5ff; color: #8056ff; }
+        .tab-btn.active { background: #8056ff; color: white; box-shadow: 0 4px 12px rgba(128,86,255,0.25); }
 
         .action-btn { 
             width: 32px; height: 32px; border-radius: 8px; border: none; cursor: pointer; color: white; 
@@ -151,7 +166,7 @@ $result = $db->query($sql);
         .close-modal { position: absolute; top: 20px; right: 24px; font-size: 24px; cursor: pointer; color: #aaa; }
         
         .form-row { margin-bottom: 16px; }
-        .form-row label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 700; color: var(--text-main); }
+        .form-row label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 700; color: #333; }
         .form-row input, .form-row select { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 10px; font-size: 14px; background: #fdfdff; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -185,7 +200,7 @@ $result = $db->query($sql);
                             </a>
                         </li>
                         <li>
-                            <a href="login.php" class="nav-item">
+                            <a href="../logout.php" class="nav-item">
                                 <span class="nav-icon"><i class="fa-solid fa-arrow-right-from-bracket"></i></span>
                                 <span class="nav-label">Logout</span>
                             </a>
@@ -198,10 +213,10 @@ $result = $db->query($sql);
                 <header class="dashboard-topbar">
                     <div>
                         <h1 class="welcome-title" style="font-size: 26px;">User Management</h1>
-                        <p style="color: var(--text-sub); font-size: 14px; margin-top: 4px;">Manage accounts for Students, Staff, and Admins</p>
+                        <p style="color: #666; font-size: 14px; margin-top: 4px;">Manage accounts for Students, Staff, and Admins</p>
                     </div>
                     <div class="topbar-right">
-                        <button onclick="openModal('create')" class="btn"><i class="fa-solid fa-plus"></i> Add User</button>
+                        <button onclick="openModal('create')" class="btn" style="background: #8056ff; color: white; padding: 10px 20px; border-radius: 8px; border:none; cursor:pointer;"><i class="fa-solid fa-plus"></i> Add User</button>
                     </div>
                 </header>
 
@@ -220,56 +235,57 @@ $result = $db->query($sql);
 
                 <section class="announcements-card">
                     <div class="table-container">
-                        <table class="student-table">
+                        <table class="student-table" style="width: 100%; border-collapse: collapse;">
                             <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Role</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>
+                                <tr style="background:#f9fafb; border-bottom: 2px solid #eee; text-align: left;">
+                                    <th style="padding:12px;">ID</th>
+                                    <th style="padding:12px;">Role</th>
+                                    <th style="padding:12px;">Name</th>
+                                    <th style="padding:12px;">Email</th>
+                                    <th style="padding:12px;">
                                         <?php 
                                         if ($activeTab == 'student') echo 'Programme';
-                                        elseif ($activeTab == 'staff') echo 'Department';
+                                        elseif ($activeTab == 'staff') echo 'Type';
                                         elseif ($activeTab == 'admin') echo 'Contact No';
                                         else echo 'Details';
                                         ?>
                                     </th>
-                                    <th>Actions</th>
+                                    <th style="padding:12px;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php if($result && $result->num_rows > 0): ?>
                                     <?php while($row = $result->fetch_assoc()): ?>
-                                    <tr>
-                                        <td class="id-cell"><?php echo $row['id']; ?></td>
-                                        <td>
+                                    <tr style="border-bottom: 1px solid #f0f0f0;">
+                                        <td class="id-cell" style="padding:12px; font-weight:600;"><?php echo $row['childID']; ?></td>
+                                        <td style="padding:12px;">
                                             <?php 
                                             $badgeColor = '#f3e5ff'; // Purple (Student)
                                             $textColor = '#8056ff';
                                             if($row['role'] == 'Admin') { $badgeColor = '#ffe5e5'; $textColor = '#ff5f73'; } // Red
                                             if($row['role'] == 'Staff') { $badgeColor = '#e5f6ff'; $textColor = '#00a8ff'; } // Blue
                                             ?>
-                                            <span class="badge-prog" style="background: <?php echo $badgeColor; ?>; color: <?php echo $textColor; ?>;">
+                                            <span style="background: <?php echo $badgeColor; ?>; color: <?php echo $textColor; ?>; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase;">
                                                 <?php echo $row['role']; ?>
                                             </span>
                                         </td>
-                                        <td class="name-cell"><?php echo $row['name']; ?></td>
-                                        <td><?php echo $row['email']; ?></td>
-                                        <td>
+                                        <td class="name-cell" style="padding:12px;"><?php echo $row['name']; ?></td>
+                                        <td style="padding:12px;"><?php echo $row['email']; ?></td>
+                                        <td style="padding:12px;">
                                             <?php 
                                                 echo $row['extra']; 
                                                 if($row['grp']) echo " <span style='color:#aaa; font-size:12px;'>(" . $row['grp'] . ")</span>";
                                             ?>
                                         </td>
-                                        <td>
-                                            <?php if($row['id'] !== $_SESSION['user_id']): ?>
+                                        <td style="padding:12px;">
+                                            <?php if($row['userID'] !== $_SESSION['user_id']): ?>
                                                 <button class="action-btn btn-edit" onclick='openEdit(<?php echo json_encode($row); ?>)'>
                                                     <i class="fa-solid fa-pen"></i>
                                                 </button>
+                                                
                                                 <form method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
                                                     <input type="hidden" name="action" value="delete">
-                                                    <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                                    <input type="hidden" name="uid" value="<?php echo $row['userID']; ?>">
                                                     <button type="submit" class="action-btn btn-delete"><i class="fa-solid fa-trash"></i></button>
                                                 </form>
                                             <?php else: ?>
@@ -332,7 +348,7 @@ $result = $db->query($sql);
                 </div>
 
                 <div style="margin-top:24px;">
-                    <button type="submit" class="btn" style="width:100%;">Save User</button>
+                    <button type="submit" class="btn" style="width:100%; background: #8056ff; color: white; padding: 12px; border:none; border-radius: 8px; cursor:pointer;">Save User</button>
                 </div>
             </form>
         </div>
@@ -352,8 +368,8 @@ $result = $db->query($sql);
                 inpExtra.placeholder = 'e.g. RSD';
                 groupRow.style.display = 'block';
             } else if (role === 'Staff') {
-                lblExtra.innerText = 'Department';
-                inpExtra.placeholder = 'e.g. IT Support';
+                lblExtra.innerText = 'Staff Type';
+                inpExtra.placeholder = 'e.g. Lecturer / Tutor';
                 groupRow.style.display = 'none';
             } else { // Admin
                 lblExtra.innerText = 'Contact No';
@@ -367,10 +383,14 @@ $result = $db->query($sql);
             document.getElementById('formAction').value = mode;
             document.getElementById('modalTitle').innerText = mode === 'create' ? 'Add New User' : 'Edit User';
             
+            const roleSelect = document.getElementById('inpRole');
+            
             if(mode === 'create') {
                 document.getElementById('inpId').value = '';
                 document.getElementById('inpId').readOnly = false;
-                document.getElementById('inpRole').disabled = false;
+                roleSelect.style.pointerEvents = 'auto';
+                roleSelect.style.background = '#fdfdff';
+                
                 document.getElementById('inpName').value = '';
                 document.getElementById('inpEmail').value = '';
                 document.getElementById('inpExtra').value = '';
@@ -381,10 +401,13 @@ $result = $db->query($sql);
 
         function openEdit(data) {
             openModal('update');
-            document.getElementById('inpId').value = data.id;
+            document.getElementById('inpId').value = data.childID || data.userID; 
             document.getElementById('inpId').readOnly = true; 
-            document.getElementById('inpRole').value = data.role;
-            // document.getElementById('inpRole').disabled = true; 
+            
+            const roleSelect = document.getElementById('inpRole');
+            roleSelect.value = data.role;
+            roleSelect.style.pointerEvents = 'none';
+            roleSelect.style.background = '#eee';
             
             document.getElementById('inpName').value = data.name;
             document.getElementById('inpEmail').value = data.email;
@@ -397,7 +420,6 @@ $result = $db->query($sql);
             modal.classList.remove('open');
         }
 
-        // Initialize fields on load
         toggleFields(); 
     </script>
 </body>
