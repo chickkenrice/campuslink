@@ -1,0 +1,826 @@
+/* =====================================================
+   ADMIN.CSS - CampusLink Admin Panel Styles
+   Consolidated from: activity-logs.php, manage-students.php,
+   manage-timetable.php, users-report.php
+   ===================================================== */
+
+
+/* =====================================================
+   SHARED: Tab Navigation
+   ===================================================== */
+.tab-nav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 12px;
+}
+
+.tab-btn {
+    padding: 8px 20px;
+    border-radius: 20px;
+    border: none;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #666;
+    background: transparent;
+    transition: all 0.2s;
+}
+
+.tab-btn:hover { background: #f5f5ff; color: #8056ff; }
+.tab-btn.active { background: #8056ff; color: white; box-shadow: 0 4px 12px rgba(128,86,255,0.25); }
+
+/* Tab header container (manage-students) resets tab-nav border */
+.tab-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 12px;
+}
+
+.tab-header-container .tab-nav {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+
+/* =====================================================
+   SHARED: Modal
+   ===================================================== */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(24,27,47,0.5);
+    backdrop-filter: blur(2px);
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal.open {
+    display: flex;
+    animation: fadeIn 0.2s;
+}
+
+.modal-content {
+    background: white;
+    padding: 32px;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.close-modal:hover {
+    color: #666;
+}
+
+/* Override for manage-students edit modal */
+#userModal .modal-content {
+    max-width: 450px;
+    max-height: none;
+    overflow-y: visible;
+}
+
+
+/* =====================================================
+   SHARED: Action Buttons
+   ===================================================== */
+.action-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 4px;
+    transition: transform 0.1s;
+}
+
+.action-btn:hover { transform: translateY(-2px); }
+.btn-edit { background: #4a90e2; }
+.btn-delete { background: #ff5f73; }
+
+
+/* =====================================================
+   SHARED: Table Container (base - max-height set inline)
+   ===================================================== */
+.table-container {
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: auto;
+    display: block;
+    border-radius: 16px;
+    border: 1px solid rgba(202, 200, 240, 0.4);
+    background: var(--white);
+}
+
+
+/* =====================================================
+   SHARED: Report Button
+   ===================================================== */
+.report-btn {
+    background: #059669;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.report-btn:hover {
+    background: #047857;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(5,150,105,0.3);
+}
+
+
+/* =====================================================
+   SHARED: Message Boxes
+   ===================================================== */
+.msg-box {
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.msg-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.msg-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+
+/* =====================================================
+   SHARED: Student Table (used in manage-students, manage-timetable)
+   ===================================================== */
+.student-table { width: 100%; border-collapse: collapse; }
+.student-table thead tr { background: #f9fafb; border-bottom: 2px solid #eee; }
+.student-table th { padding: 12px; text-align: left; font-weight: 600; color: #666; }
+.student-table tbody tr { border-bottom: 1px solid #f0f0f0; }
+.student-table td { padding: 12px; }
+.badge-prog { background: #e5f6ff; color: #00a8ff; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; }
+
+
+/* =====================================================
+   ACTIVITY LOGS: Stats Grid
+   ===================================================== */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border: 1px solid rgba(202, 200, 240, 0.3);
+}
+
+.stat-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.stat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #333;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #666;
+    margin-top: 4px;
+}
+
+
+/* =====================================================
+   ACTIVITY LOGS: Filters
+   ===================================================== */
+.filters-section {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.filter-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 6px;
+}
+
+.filter-field input,
+.filter-field select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #fdfdff;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn-filter {
+    background: #8056ff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-filter:hover {
+    background: #6b45f5;
+    transform: translateY(-1px);
+}
+
+.btn-clear {
+    background: #f0f0f0;
+    color: #666;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.btn-clear:hover {
+    background: #e0e0e0;
+}
+
+.btn-export {
+    background: linear-gradient(135deg, #00a8ff 0%, #0080ff 100%);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.btn-export:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 168, 255, 0.3);
+}
+
+
+/* =====================================================
+   ACTIVITY LOGS: Logs Table
+   ===================================================== */
+.logs-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.logs-table thead {
+    background: #f9fafb;
+    border-bottom: 2px solid #eee;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.logs-table th {
+    padding: 12px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 700;
+    color: #555;
+    text-transform: uppercase;
+}
+
+.logs-table td {
+    padding: 12px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+}
+
+.logs-table tbody tr:hover {
+    background: #f9f9ff;
+}
+
+
+/* =====================================================
+   ACTIVITY LOGS: Badges
+   ===================================================== */
+.role-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.badge-student { background: #f3e5ff; color: #8056ff; }
+.badge-staff { background: #e5f6ff; color: #00a8ff; }
+.badge-admin { background: #ffe5e5; color: #ff5f73; }
+
+.activity-badge {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.activity-login { background: #e7f5e9; color: #2d9f44; }
+.activity-logout { background: #fff3e0; color: #ff9800; }
+.activity-create { background: #e3f2fd; color: #1976d2; }
+.activity-update { background: #f3e5f5; color: #7b1fa2; }
+.activity-delete { background: #ffebee; color: #c62828; }
+.activity-attendance { background: #e0f7fa; color: #00838f; }
+.activity-submit { background: #e8f5e9; color: #2e7d32; }
+.activity-profile { background: #fff8e1; color: #f57f17; }
+.activity-default { background: #f5f5f5; color: #666; }
+
+
+/* =====================================================
+   ACTIVITY LOGS: Misc
+   ===================================================== */
+.timestamp {
+    font-size: 13px;
+    color: #666;
+}
+
+.ip-address {
+    font-family: monospace;
+    font-size: 12px;
+    color: #999;
+}
+
+.pagination {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.pagination a,
+.pagination span {
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #666;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.pagination a:hover {
+    background: #f5f5ff;
+    border-color: #8056ff;
+    color: #8056ff;
+}
+
+.pagination .current {
+    background: #8056ff;
+    color: white;
+    border-color: #8056ff;
+}
+
+.pagination .disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.no-data {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+}
+
+.no-data i {
+    font-size: 48px;
+    margin-bottom: 15px;
+    color: #ddd;
+}
+
+.details-btn {
+    background: #f0f0f0;
+    color: #666;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.details-btn:hover {
+    background: #e0e0e0;
+}
+
+
+/* =====================================================
+   MANAGE STUDENTS: Form Rows (Edit Modal)
+   ===================================================== */
+.form-row { margin-bottom: 16px; }
+.form-row label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 700; color: #333; }
+.form-row input, .form-row select { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 10px; font-size: 14px; background: #fdfdff; transition: border-color 0.2s, background-color 0.2s; }
+
+
+/* =====================================================
+   MANAGE STUDENTS: Add User Form
+   ===================================================== */
+.add-user-section { margin-bottom: 20px; }
+
+.toggle-form-btn {
+    background: linear-gradient(135deg, #8056ff 0%, #6b45f5 100%);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 4px 15px rgba(128,86,255,0.3);
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.toggle-form-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(128,86,255,0.4);
+}
+
+.add-user-form-container {
+    display: none;
+    margin-top: 20px;
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    animation: slideDown 0.3s ease;
+}
+
+.add-user-form-container.active { display: block; }
+
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-field input, .form-field select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #fdfdff;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.form-field input:focus, .form-field select:focus {
+    outline: none;
+    border-color: #8056ff;
+}
+
+.form-field input:disabled, .form-field select:disabled {
+    background: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+    border-color: #e8e8e8;
+}
+
+.error-message {
+    animation: slideInError 0.3s ease;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-submit {
+    background: #8056ff;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-submit:hover { background: #6b45f5; }
+
+.btn-cancel {
+    background: #f0f0f0;
+    color: #666;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-cancel:hover { background: #e0e0e0; }
+
+
+/* =====================================================
+   MANAGE TIMETABLE: Form Card
+   ===================================================== */
+.form-card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
+.form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+.form-group label { display: block; font-weight: 600; font-size: 13px; color: #555; margin-bottom: 5px; }
+.form-group select, .form-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
+.btn-add { grid-column: span 2; padding: 12px; background: var(--purple-base); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; margin-top: 10px; box-shadow: 0 4px 15px rgba(128,86,255,0.3); transition: all 0.2s; }
+.btn-add:hover { background: var(--purple-deep); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(128,86,255,0.4); }
+
+
+/* =====================================================
+   USERS REPORT: Print-style A4 Layout
+   ===================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Times+New+Roman:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600;700&display=swap');
+
+.users-report-page {
+    font-family: 'Inter', sans-serif;
+    background: #525659;
+    margin: 0;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Floating Action Buttons */
+.fab-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.fab {
+    background: #8056ff;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Inter', sans-serif;
+    transition: 0.2s;
+    font-size: 14px;
+}
+
+.fab:hover { transform: translateY(-3px); background: #6b46c1; }
+.fab-secondary { background: #1f2937; }
+.fab-secondary:hover { background: #374151; }
+
+/* The A4 Page */
+.page {
+    background: white;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 15mm 20mm;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* Report Header */
+.users-report-page .header { text-align: center; border-bottom: 3px solid #000; padding-bottom: 20px; margin-bottom: 25px; }
+
+.logo-circle {
+    width: 70px;
+    height: 70px;
+    background: #000;
+    color: #fff;
+    border-radius: 50%;
+    font-family: 'Times New Roman', serif;
+    font-weight: 700;
+    font-size: 28px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 15px auto;
+}
+
+.uni-name {
+    font-family: 'Times New Roman', serif;
+    text-transform: uppercase;
+    font-size: 20px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: #000;
+}
+
+.report-title { font-size: 16px; text-transform: uppercase; color: #333; font-weight: 600; }
+
+/* Metadata Box */
+.meta-box { border: 1px solid #000; display: flex; margin-bottom: 25px; }
+.meta-col { flex: 1; padding: 10px; border-right: 1px solid #000; }
+.meta-col:last-child { border-right: none; }
+.users-report-page .label { display: block; font-size: 10px; text-transform: uppercase; color: #555; font-weight: 700; margin-bottom: 4px; }
+.value { font-size: 13px; font-weight: 600; color: #000; }
+
+/* Report Table */
+.users-report-page table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-bottom: 30px;
+}
+
+.users-report-page th {
+    background: #e5e5e5;
+    text-align: left;
+    padding: 12px 10px;
+    border: 1px solid #000;
+    font-size: 11px;
+    font-weight: 700;
+    color: #000;
+    text-transform: uppercase;
+}
+
+.users-report-page th:first-child { text-align: center; width: 12%; }
+.users-report-page th:nth-child(3) { text-align: left; width: 35%; }
+.users-report-page th:last-child { text-align: center; width: 15%; }
+
+.users-report-page td {
+    padding: 10px;
+    border: 1px solid #000;
+    color: #000;
+}
+
+.users-report-page td:first-child { text-align: center; font-weight: 600; }
+.users-report-page td:last-child { text-align: center; }
+.users-report-page tr:nth-child(even) { background: #fafafa; }
+.users-report-page tr:hover { background: #f3f4f6; }
+
+/* Report Role Badges */
+.users-report-page .role-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    display: inline-block;
+    text-transform: uppercase;
+}
+
+.role-student { background: #dbeafe; color: #1e40af; }
+.role-staff { background: #d1fae5; color: #065f46; }
+.role-admin { background: #fce7f3; color: #9f1239; }
+
+/* Report Footer */
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 40px;
+    page-break-inside: avoid;
+}
+
+.signature {
+    text-align: center;
+    width: 220px;
+}
+
+.sig-line {
+    border-top: 1px solid #000;
+    margin-top: 50px;
+    padding-top: 10px;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.page-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #555;
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #000;
+}
+
+/* Report Print Styles */
+@media print {
+    .users-report-page { background: white; padding: 0; }
+    .page { box-shadow: none; margin: 0; width: 100%; height: auto; padding: 10mm; }
+    .fab-container { display: none; }
+    @page { margin: 10mm; }
+}
+
+
+/* =====================================================
+   ANIMATIONS
+   ===================================================== */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInError {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
