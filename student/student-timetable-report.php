@@ -136,6 +136,7 @@ $intake = $academicYear;
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/png" href="../favicon2.png">
     <meta charset="UTF-8">
     <title>Official Class Timetable - <?php echo htmlspecialchars($studentName); ?></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">

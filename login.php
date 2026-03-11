@@ -253,6 +253,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!doctype html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/png" href="favicon2.png">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script>window.addEventListener("pageshow",function(e){if(e.persisted){window.location.reload();}});</script>
@@ -360,5 +361,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
     </script>
     <script src="login-bg.js"></script>
+    <!-- Footer -->
+    <footer class="cl-footer">
+        <div class="cl-footer-line"></div>
+        <div class="cl-footer-content">
+            <span class="cl-footer-link">DISCLAIMER</span>
+            <span class="cl-footer-divider">|</span>
+            <span class="cl-footer-link">PRIVACY POLICY</span>
+            <span class="cl-footer-divider">|</span>
+            <span class="cl-footer-link">ABAC Policy</span>
+            <span class="cl-footer-divider">|</span>
+            <span class="cl-footer-copyright">COPYRIGHT &copy; <?php echo date('Y'); ?> <strong>CAMPUSLink. ALL RIGHTS RESERVED</strong></span>
+            <div class="cl-footer-social">
+                <i class="fa-brands fa-tiktok"></i>
+                <i class="fa-brands fa-facebook"></i>
+                <i class="fa-brands fa-instagram"></i>
+                <i class="fa-brands fa-linkedin"></i>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

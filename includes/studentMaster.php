@@ -72,9 +72,9 @@ $programmeOpen = in_array($currentPage ?? '', $programmePages);
                 </div>
             </li>
             <li>
-                <a href="<?php echo $studentRoot; ?>logout.php" class="nav-item" style="margin-top: 20px;">
+                <a href="<?php echo $studentRoot; ?>logout.php" class="nav-item nav-item-logout" style="margin-top: 20px;">
                     <span class="nav-icon"><i class="fa-solid fa-arrow-right-from-bracket"></i></span>
-                    <span class="nav-label" style="color: white;">Logout</span>
+                    <span class="nav-label">Logout</span>
                 </a>
             </li>
         </ul>

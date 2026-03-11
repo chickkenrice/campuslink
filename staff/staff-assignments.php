@@ -318,6 +318,7 @@ $totalAssignments = count($allAssignments);
 <!doctype html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/png" href="../favicon2.png">
     <meta charset="utf-8">
     <title>Assignments - CAMPUSLink</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
