@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // ----------------------------------------------------------
         case 'getBookableFacilities':
             $typeFilter = $_GET['type'] ?? '';
+            $isAdminUser = ($userRole === 'admin');
 
             $query = "SELECT f.facilityID, f.facilityName, f.type, f.location, f.capacity, 
                              br.maxDurationMinutes, br.maxAdvanceDays, br.maxActiveBookings, 
@@ -42,11 +43,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $types .= 's';
             }
 
-            // Filter by role access
+            // Filter by role access for student/staff. Admin can view all facility types.
             $roleLabel = ucfirst($userRole); // 'Student' or 'Staff'
-            $query .= " AND (br.allowedRoles IS NULL OR br.allowedRoles LIKE CONCAT('%', ?, '%'))";
-            $params[] = $roleLabel;
-            $types .= 's';
+            if (!$isAdminUser) {
+                $query .= " AND (br.allowedRoles IS NULL OR br.allowedRoles LIKE CONCAT('%', ?, '%'))";
+                $params[] = $roleLabel;
+                $types .= 's';
+            }
 
             $query .= " ORDER BY f.type, f.facilityName";
 
@@ -63,14 +66,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             }
 
             // Get distinct types for filter
-            $typeStmt = $db->prepare(
-                "SELECT DISTINCT f.type FROM facility f 
-                 LEFT JOIN booking_rules br ON f.type = br.facilityType
-                 WHERE f.status = 'Active' AND f.type != 'Hall'
-                 AND (br.allowedRoles IS NULL OR br.allowedRoles LIKE CONCAT('%', ?, '%'))
-                 ORDER BY f.type"
-            );
-            $typeStmt->bind_param("s", $roleLabel);
+            $typeSql = "SELECT DISTINCT f.type FROM facility f 
+                        LEFT JOIN booking_rules br ON f.type = br.facilityType
+                        WHERE f.status = 'Active' AND f.type != 'Hall'";
+            if (!$isAdminUser) {
+                $typeSql .= " AND (br.allowedRoles IS NULL OR br.allowedRoles LIKE CONCAT('%', ?, '%'))";
+            }
+            $typeSql .= " ORDER BY f.type";
+
+            $typeStmt = $db->prepare($typeSql);
+            if (!$isAdminUser) {
+                $typeStmt->bind_param("s", $roleLabel);
+            }
             $typeStmt->execute();
             $typeResult = $typeStmt->get_result();
             $availableTypes = [];
@@ -272,7 +279,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         case 'getMyBookings':
             $statusFilter = $_GET['status'] ?? '';
 
-            $query = "SELECT fb.*, f.facilityName, f.type, f.location
+            $query = "SELECT fb.*, f.facilityName, f.type, f.location, f.status AS facilityStatus
                       FROM facility_booking fb
                       JOIN facility f ON fb.facilityID = f.facilityID
                       WHERE fb.userID = ?";
@@ -388,11 +395,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $dayOfWeek = date('l', strtotime($schedDate));
 
             // Get all bookable facilities (exclude Hall)
-            $facQuery = "SELECT f.facilityID, f.facilityName, f.type, f.location, f.capacity,
+                 $facQuery = "SELECT f.facilityID, f.facilityName, f.type, f.location, f.capacity, f.status,
                                 br.operatingStart, br.operatingEnd
                          FROM facility f
                          LEFT JOIN booking_rules br ON f.type = br.facilityType
-                         WHERE f.status = 'Active' AND f.type != 'Hall'";
+                         WHERE f.type != 'Hall'";
             $facParams = [];
             $facTypes = '';
             if (!empty($schedType)) {

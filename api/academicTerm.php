@@ -59,10 +59,21 @@ function generateWeekRanges($startDate, $endDate, $totalWeeks) {
     $weeks = [];
     $start = new DateTime($startDate);
     $end = new DateTime($endDate);
+
+    // Timetable UI is Monday-Friday based, so align generated week ranges to Monday.
+    // If term starts mid-week, Week 1 begins on the next Monday.
+    $firstWeekStart = clone $start;
+    if ((int)$firstWeekStart->format('N') !== 1) {
+        $firstWeekStart->modify('next monday');
+    }
     
     for ($i = 1; $i <= $totalWeeks; $i++) {
-        $weekStart = clone $start;
+        $weekStart = clone $firstWeekStart;
         $weekStart->modify('+' . ($i - 1) . ' weeks');
+
+        if ($weekStart > $end) {
+            break;
+        }
         
         $weekEnd = clone $weekStart;
         $weekEnd->modify('+6 days');
@@ -114,9 +125,27 @@ function getActiveTermWithWeeks($conn, $studentID) {
     $termResult = $stmt->get_result();
     
     if ($termResult->num_rows === 0) {
-        return null;
+        // Fallback: if no active term (e.g. future semester before start date),
+        // use the nearest upcoming term for the same cohort so timetable can still load.
+        $fallback = $conn->prepare(
+            "SELECT * FROM academic_term
+             WHERE status = 'Upcoming'
+               AND programID = ?
+               AND year = ?
+               AND semester = ?
+             ORDER BY startDate ASC
+             LIMIT 1"
+        );
+        $fallback->bind_param("sii", $student['programID'], $student['currentYear'], $student['currentSemester']);
+        $fallback->execute();
+        $termResult = $fallback->get_result();
+        $fallback->close();
+
+        if ($termResult->num_rows === 0) {
+            return null;
+        }
     }
-    
+
     $term = $termResult->fetch_assoc();
     
     // Calculate student's credit hours for this term
@@ -176,6 +205,20 @@ function getActiveTermForStaff($conn) {
     $term['weeks'] = $weeks;
 
     return $term;
+}
+
+// Keep student current semester/year aligned when admin manually sets a term as Active.
+// Scope is limited to the same program + year to avoid affecting other cohorts.
+function syncStudentsToActiveTerm($conn, $programID, $year, $semester) {
+    $stmt = $conn->prepare(
+        "UPDATE student
+         SET currentYear = ?, currentSemester = ?
+         WHERE programID = ? AND currentYear = ?"
+    );
+    if (!$stmt) return;
+    $stmt->bind_param("iisi", $year, $semester, $programID, $year);
+    $stmt->execute();
+    $stmt->close();
 }
 
 // Handle API requests
@@ -403,6 +446,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $stmt->bind_param("siisssssisi", $programID, $year, $semester, $academicYear, $startDate, $endDate, $regStartDate, $regEndDate, $weeksTotal, $status, $termID);
 
             if ($stmt->execute()) {
+                if ($status === 'Active') {
+                    syncStudentsToActiveTerm($conn, $programID, $year, $semester);
+                }
                 echo json_encode(['success' => true, 'message' => 'Academic term updated successfully']);
             } else {
                 echo json_encode(['success' => false, 'message' => 'Failed to update term: ' . $conn->error]);

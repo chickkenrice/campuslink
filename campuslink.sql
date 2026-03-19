@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 09, 2026 at 03:36 PM
+-- Generation Time: Mar 19, 2026 at 02:03 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -47,14 +47,15 @@ CREATE TABLE `academic_term` (
 --
 
 INSERT INTO `academic_term` (`termID`, `academicYear`, `semester`, `programID`, `year`, `startDate`, `endDate`, `regStartDate`, `regEndDate`, `weeksTotal`, `status`, `created_at`) VALUES
-(1, '2025/2026', 1, 'RSD', 1, '2026-01-26', '2026-03-15', NULL, NULL, 7, 'Active', '2026-01-29 12:27:52'),
-(2, '2025/2026', 2, 'RSD', 1, '2026-03-30', '2026-07-05', '2026-01-26', '2026-02-15', 14, 'Active', '2026-01-29 12:27:52'),
-(4, '2025/2026', 1, 'RSW', 1, '2026-01-26', '2026-03-15', NULL, NULL, 7, 'Active', '2026-01-29 12:37:02'),
-(5, '2025/2026', 2, 'RSD', 2, '2027-01-11', '2027-04-18', '2026-11-09', '2026-11-29', 14, 'Active', '2026-02-11 12:40:40'),
-(6, '2025/2026', 3, 'RSD', 2, '2027-05-03', '2027-08-08', '2026-02-28', '2027-01-31', 14, 'Active', '2026-02-11 12:40:40'),
+(1, '2025/2026', 1, 'RSD', 1, '2026-02-02', '2026-03-21', NULL, NULL, 7, 'Active', '2026-01-29 12:27:52'),
+(2, '2025/2026', 2, 'RSD', 1, '2026-03-30', '2026-07-05', '2026-01-26', '2026-03-13', 14, 'Upcoming', '2026-01-29 12:27:52'),
+(4, '2025/2026', 1, 'RSW', 1, '2026-01-26', '2026-03-15', NULL, NULL, 7, 'Completed', '2026-01-29 12:37:02'),
+(5, '2025/2026', 2, 'RSD', 2, '2027-01-11', '2027-04-18', '2026-11-09', '2026-11-29', 14, 'Upcoming', '2026-02-11 12:40:40'),
+(6, '2025/2026', 3, 'RSD', 2, '2027-05-03', '2027-08-08', '2026-02-28', '2027-01-31', 14, 'Upcoming', '2026-02-11 12:40:40'),
 (9, '2025/2026', 3, 'RSD', 1, '2026-07-20', '2026-10-25', '2026-03-30', '2026-04-19', 14, 'Upcoming', '2026-02-28 03:28:56'),
 (10, '2025/2026', 1, 'RSD', 2, '2026-11-09', '2026-12-27', '2026-07-20', '2026-08-09', 7, 'Upcoming', '2026-02-28 03:37:57'),
-(11, '2025/2026', 2, 'RSW', 1, '2026-03-30', '2026-07-04', '2026-01-26', '2026-02-15', 14, 'Active', '2026-02-28 03:41:50');
+(11, '2025/2026', 2, 'RSW', 1, '2026-03-30', '2026-07-04', '2026-01-26', '2026-02-15', 14, 'Upcoming', '2026-02-28 03:41:50'),
+(12, '2027/2028', 1, 'RSD', 1, '2026-05-01', '2026-06-17', NULL, NULL, 7, 'Upcoming', '2026-03-14 06:04:23');
 
 -- --------------------------------------------------------
 
@@ -71,7 +72,7 @@ CREATE TABLE `activity_logs` (
   `activity_description` text NOT NULL,
   `ip_address` varchar(45) DEFAULT NULL,
   `timestamp` datetime DEFAULT current_timestamp(),
-  `details` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`details`))
+  `details` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1064,7 +1065,197 @@ INSERT INTO `activity_logs` (`logID`, `userID`, `userName`, `userRole`, `activit
 (1019, 'U001', 'Super Admin', 'Admin', 'LOGOUT', 'User logged out', '::1', '2026-03-09 22:33:37', '{\"userName\":\"Super Admin\",\"role\":\"admin\"}'),
 (1020, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '::1', '2026-03-09 22:34:39', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
 (1021, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '::1', '2026-03-09 22:35:09', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
-(1022, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGOUT', 'User logged out', '::1', '2026-03-09 22:35:53', '{\"userName\":\"Dr. Aini Musa\",\"role\":\"staff\"}');
+(1022, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGOUT', 'User logged out', '::1', '2026-03-09 22:35:53', '{\"userName\":\"Dr. Aini Musa\",\"role\":\"staff\"}'),
+(1023, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-11 23:59:40', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1024, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-11 23:59:52', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1025, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGIN', 'Staff logged in successfully', '113.211.212.42', '2026-03-11 23:59:58', '{\"userName\":\"Dr. Aini Musa\"}'),
+(1026, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-12 00:19:09', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1027, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-12 00:23:26', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1028, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGIN', 'Staff logged in successfully', '113.211.212.42', '2026-03-12 00:35:15', '{\"userName\":\"Dr. Aini Musa\"}'),
+(1029, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-12 00:36:08', '{\"userName\":\"Dr. Aini Musa\",\"role\":\"staff\"}'),
+(1030, 'U001', 'Super Admin', 'Admin', 'LOGIN', 'Admin logged in successfully', '113.211.212.42', '2026-03-12 00:36:21', '{\"userName\":\"Super Admin\"}'),
+(1031, 'U001', 'Super Admin', 'Admin', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-12 00:38:31', '{\"userName\":\"Super Admin\",\"role\":\"admin\"}'),
+(1032, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-12 00:39:15', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1033, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-12 00:39:58', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1034, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-12 11:59:24', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1035, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-12 11:59:44', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1036, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGIN', 'Staff logged in successfully', '113.211.212.42', '2026-03-12 11:59:54', '{\"userName\":\"Dr. Aini Musa\"}'),
+(1037, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-12 12:00:19', '{\"userName\":\"Dr. Aini Musa\",\"role\":\"staff\"}'),
+(1038, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-12 22:02:58', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1039, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-12 22:04:11', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1040, 'U014', 'Divya A/P Kumar', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-12 22:04:18', '{\"userName\":\"Divya A\\/P Kumar\"}'),
+(1041, 'U014', 'Divya A/P Kumar', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-12 22:05:30', '{\"userName\":\"Divya A\\/P Kumar\",\"role\":\"student\"}'),
+(1042, 'U014', 'Divya A/P Kumar', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-12 22:05:56', '{\"userName\":\"Divya A\\/P Kumar\"}'),
+(1043, 'U014', 'Divya A/P Kumar', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-12 22:32:55', '{\"userName\":\"Divya A\\/P Kumar\",\"role\":\"student\"}'),
+(1044, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-12 22:33:01', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1045, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGIN', 'Staff logged in successfully', '113.211.212.42', '2026-03-12 22:33:29', '{\"userName\":\"Dr. Aini Musa\"}'),
+(1046, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-12 22:35:48', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1047, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '182.62.233.210', '2026-03-12 22:43:20', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1048, 'U013', 'Arvind A/L Subramaniam', 'Student', 'ATTENDANCE', 'Student took attendance for English for Tertiary Studies (BJEL1713) - Status: Present', '182.62.233.210', '2026-03-12 22:46:27', '{\"scheduleID\":\"65\",\"courseID\":\"BJEL1713\",\"courseName\":\"English for Tertiary Studies\",\"date\":\"2026-03-12\",\"scanTime\":\"22:46:27\",\"status\":\"Present\"}'),
+(1049, 'U001', 'Super Admin', 'Admin', 'LOGIN', 'Admin logged in successfully', '113.211.212.42', '2026-03-12 22:53:31', '{\"userName\":\"Super Admin\"}'),
+(1050, 'U001', 'Super Admin', 'Admin', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-12 22:57:58', '{\"userName\":\"Super Admin\",\"role\":\"admin\"}'),
+(1051, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGIN', 'Staff logged in successfully', '113.211.212.42', '2026-03-12 22:58:15', '{\"userName\":\"Dr. Aini Musa\"}'),
+(1052, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-12 22:59:43', '{\"userName\":\"Dr. Aini Musa\",\"role\":\"staff\"}'),
+(1053, 'U014', 'Divya A/P Kumar', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-12 22:59:50', '{\"userName\":\"Divya A\\/P Kumar\"}'),
+(1054, 'U014', 'Divya A/P Kumar', 'Student', 'ASSIGNMENT_SUBMIT', 'Student submitted assignment: English Essay for English for Tertiary Studies (BJEL1713) (1 files)', '113.211.212.42', '2026-03-12 23:01:31', '{\"assignmentID\":18,\"title\":\"English Essay\",\"courseID\":\"BJEL1713\",\"fileCount\":1,\"submissionStatus\":\"Submitted\"}'),
+(1055, '23WP12926', 'Unknown', '', 'PROFILE_UPDATE', 'Student removed their profile photo', '113.211.212.42', '2026-03-12 23:14:14', NULL),
+(1056, 'U014', 'Divya A/P Kumar', 'Student', 'PROFILE_UPDATE', 'Student updated their profile', '113.211.212.42', '2026-03-12 23:14:58', '{\"contactNo\":\"012-9876543\"}'),
+(1057, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '182.62.233.210', '2026-03-12 23:16:10', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1058, 'U014', 'Divya A/P Kumar', 'Student', 'LOGIN', 'Student logged in successfully', '182.62.233.210', '2026-03-12 23:16:34', '{\"userName\":\"Divya A\\/P Kumar\"}'),
+(1059, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-13 21:16:57', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1060, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGIN', 'Staff logged in successfully', '113.211.212.42', '2026-03-13 21:17:12', '{\"userName\":\"Dr. Aini Musa\"}'),
+(1061, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-13 21:17:37', '{\"userName\":\"Dr. Aini Musa\",\"role\":\"staff\"}'),
+(1062, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-13 21:24:28', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1063, 'U001', 'Super Admin', 'Admin', 'LOGIN', 'Admin logged in successfully', '113.211.212.42', '2026-03-13 21:24:38', '{\"userName\":\"Super Admin\"}'),
+(1064, 'U001', 'Super Admin', 'Admin', 'LOGIN', 'Admin logged in successfully', '113.211.212.42', '2026-03-13 22:04:39', '{\"userName\":\"Super Admin\"}'),
+(1065, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-13 22:05:55', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1066, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-13 22:14:13', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1067, 'U001', 'Super Admin', 'Admin', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-13 22:47:01', '{\"userName\":\"Super Admin\",\"role\":\"admin\"}'),
+(1068, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-13 22:47:13', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1069, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.96.142', '2026-03-13 22:58:41', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1070, '23WP12509', 'Unknown', '', 'PROFILE_UPDATE', 'Student removed their profile photo', '113.211.96.142', '2026-03-13 22:58:53', NULL),
+(1071, 'U013', 'Arvind A/L Subramaniam', 'Student', 'PROFILE_UPDATE', 'Student updated their profile', '113.211.96.142', '2026-03-13 22:59:33', '{\"contactNo\":\"012-22622267\"}'),
+(1072, 'U013', 'Arvind A/L Subramaniam', 'Student', 'PROFILE_UPDATE', 'Student updated their profile', '113.211.96.142', '2026-03-13 23:00:31', '{\"contactNo\":\"012-22622267\"}'),
+(1073, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.96.142', '2026-03-13 23:01:56', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1074, 'U008', 'Dr. Wong Siew', 'Staff', 'LOGIN', 'Staff logged in successfully', '113.211.96.142', '2026-03-13 23:02:15', '{\"userName\":\"Dr. Wong Siew\"}'),
+(1075, 'U015', 'Teoh Kah Mun', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.96.142', '2026-03-13 23:04:02', '{\"userName\":\"Teoh Kah Mun\"}'),
+(1076, 'U015', 'Teoh Kah Mun', 'Student', 'ASSIGNMENT_SUBMIT', 'Student submitted assignment: Projek Etika for Penghayatan Etika dan Peradaban (MPU3103) (1 files)', '113.211.96.142', '2026-03-13 23:07:31', '{\"assignmentID\":17,\"title\":\"Projek Etika\",\"courseID\":\"MPU3103\",\"fileCount\":1,\"submissionStatus\":\"Submitted\"}'),
+(1077, 'U015', 'Teoh Kah Mun', 'Student', 'ASSIGNMENT_UNSUBMIT', 'Student unsubmitted assignment: Projek Etika for Penghayatan Etika dan Peradaban (MPU3103)', '113.211.96.142', '2026-03-13 23:08:05', '{\"assignmentID\":17,\"title\":\"Projek Etika\",\"courseID\":\"MPU3103\"}'),
+(1078, 'U015', 'Teoh Kah Mun', 'Student', 'LOGOUT', 'User logged out', '113.211.96.142', '2026-03-13 23:08:30', '{\"userName\":\"Teoh Kah Mun\",\"role\":\"student\"}'),
+(1079, 'U014', 'Divya A/P Kumar', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.96.142', '2026-03-13 23:09:45', '{\"userName\":\"Divya A\\/P Kumar\"}'),
+(1080, 'U014', 'Divya A/P Kumar', 'Student', 'LOGOUT', 'User logged out', '113.211.96.142', '2026-03-13 23:13:00', '{\"userName\":\"Divya A\\/P Kumar\",\"role\":\"student\"}'),
+(1081, 'U015', 'Teoh Kah Mun', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.96.142', '2026-03-13 23:13:08', '{\"userName\":\"Teoh Kah Mun\"}'),
+(1082, 'U008', 'Dr. Wong Siew', 'Staff', 'STUDENT_REMOVAL', 'Removed student Teoh Kah Mun (23WP14406) from RSD Group A. Reason: TRY', '113.211.96.142', '2026-03-13 23:14:01', NULL),
+(1083, 'U008', 'Dr. Wong Siew', 'Staff', 'STUDENT_REINSTATEMENT', 'Reinstated student Teoh Kah Mun (23WP14406) back to RSD Group A', '113.211.96.142', '2026-03-13 23:16:54', NULL),
+(1084, 'U008', 'Dr. Wong Siew', 'Staff', 'LOGOUT', 'User logged out', '113.211.96.142', '2026-03-13 23:17:03', '{\"userName\":\"Dr. Wong Siew\",\"role\":\"staff\"}'),
+(1085, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGIN', 'Staff logged in successfully', '113.211.96.142', '2026-03-13 23:17:12', '{\"userName\":\"Dr. Aini Musa\"}'),
+(1086, 'U002', 'Dr. Aini Musa', 'Staff', 'STUDENT_REMOVAL', 'Removed student Teoh Kah Mun (23WP14406) from RSD Group A. Reason: BAD student', '113.211.96.142', '2026-03-13 23:19:45', NULL),
+(1087, 'U002', 'Dr. Aini Musa', 'Staff', 'STUDENT_REINSTATEMENT', 'Reinstated student Teoh Kah Mun (23WP14406) back to RSD Group A', '113.211.96.142', '2026-03-13 23:24:44', NULL),
+(1088, 'U015', 'Teoh Kah Mun', 'Student', 'ATTENDANCE', 'Student took attendance for English for Tertiary Studies (BJEL1713) - Status: Present', '113.211.96.142', '2026-03-13 23:26:23', '{\"scheduleID\":\"66\",\"courseID\":\"BJEL1713\",\"courseName\":\"English for Tertiary Studies\",\"date\":\"2026-03-13\",\"scanTime\":\"23:26:23\",\"status\":\"Present\"}'),
+(1089, 'U013', 'Arvind A/L Subramaniam', 'Student', 'ATTENDANCE', 'Student took attendance for English for Tertiary Studies (BJEL1713) - Status: Present', '113.211.212.42', '2026-03-13 23:27:10', '{\"scheduleID\":\"66\",\"courseID\":\"BJEL1713\",\"courseName\":\"English for Tertiary Studies\",\"date\":\"2026-03-13\",\"scanTime\":\"23:27:10\",\"status\":\"Present\"}'),
+(1090, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGIN', 'Staff logged in successfully', '113.211.96.142', '2026-03-13 23:37:27', '{\"userName\":\"Dr. Aini Musa\"}'),
+(1091, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-13 23:37:44', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1092, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.96.142', '2026-03-13 23:37:45', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1093, 'U013', 'Arvind A/L Subramaniam', 'Student', 'ATTENDANCE', 'Student took attendance for English for Tertiary Studies (BJEL1713) - Status: Late', '113.211.96.142', '2026-03-13 23:38:30', '{\"scheduleID\":\"66\",\"courseID\":\"BJEL1713\",\"courseName\":\"English for Tertiary Studies\",\"date\":\"2026-03-13\",\"scanTime\":\"23:38:30\",\"status\":\"Late\"}'),
+(1094, 'U015', 'Teoh Kah Mun', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-13 23:38:56', '{\"userName\":\"Teoh Kah Mun\"}'),
+(1095, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-13 23:42:02', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1096, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-13 23:42:11', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1097, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-13 23:42:28', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1098, 'U014', 'Divya A/P Kumar', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-13 23:42:36', '{\"userName\":\"Divya A\\/P Kumar\"}'),
+(1099, 'U014', 'Divya A/P Kumar', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-13 23:42:50', '{\"userName\":\"Divya A\\/P Kumar\",\"role\":\"student\"}'),
+(1100, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-13 23:42:58', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1101, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-13 23:46:02', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1102, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGIN', 'Staff logged in successfully', '113.211.212.42', '2026-03-13 23:46:10', '{\"userName\":\"Dr. Aini Musa\"}'),
+(1103, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-13 23:48:26', '{\"userName\":\"Dr. Aini Musa\",\"role\":\"staff\"}'),
+(1104, 'U001', 'Super Admin', 'Admin', 'LOGIN', 'Admin logged in successfully', '113.211.212.42', '2026-03-13 23:48:33', '{\"userName\":\"Super Admin\"}'),
+(1105, 'U001', 'Super Admin', 'Admin', 'USER_CREATE', 'Created new Student: CHUN KIT WONG (ID: 26WP00001)', '113.211.212.42', '2026-03-13 23:51:57', '{\"newUserID\":\"U097\",\"newRoleID\":\"26WP00001\",\"newUserRole\":\"Student\",\"newUserName\":\"CHUN KIT WONG\",\"email\":\"wongck@student.tarc.edu.my\"}'),
+(1106, 'U001', 'Super Admin', 'Admin', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-13 23:52:18', '{\"userName\":\"Super Admin\",\"role\":\"admin\"}'),
+(1107, 'U097', 'CHUN KIT WONG', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-13 23:52:25', '{\"userName\":\"CHUN KIT WONG\"}'),
+(1108, 'U097', 'CHUN KIT WONG', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-13 23:52:34', '{\"userName\":\"CHUN KIT WONG\",\"role\":\"student\"}'),
+(1109, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGIN', 'Staff logged in successfully', '113.211.212.42', '2026-03-13 23:52:43', '{\"userName\":\"Dr. Aini Musa\"}'),
+(1110, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-13 23:53:40', '{\"userName\":\"Dr. Aini Musa\",\"role\":\"staff\"}'),
+(1111, 'U097', 'CHUN KIT WONG', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-13 23:53:57', '{\"userName\":\"CHUN KIT WONG\"}'),
+(1112, 'U097', 'CHUN KIT WONG', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-13 23:54:06', '{\"userName\":\"CHUN KIT WONG\",\"role\":\"student\"}'),
+(1113, 'U001', 'Super Admin', 'Admin', 'LOGIN', 'Admin logged in successfully', '113.211.212.42', '2026-03-13 23:54:14', '{\"userName\":\"Super Admin\"}'),
+(1114, 'U001', 'Super Admin', 'Admin', 'USER_DELETE', 'Deleted user account: U097', '113.211.212.42', '2026-03-13 23:54:29', '{\"deletedUserID\":\"U097\",\"deletedUserRole\":\"Student\"}'),
+(1115, 'U015', 'Teoh Kah Mun', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-13 23:58:34', '{\"userName\":\"Teoh Kah Mun\",\"role\":\"student\"}'),
+(1116, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGIN', 'Staff logged in successfully', '113.211.212.42', '2026-03-13 23:58:39', '{\"userName\":\"Dr. Aini Musa\"}'),
+(1117, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 00:02:26', '{\"userName\":\"Dr. Aini Musa\",\"role\":\"staff\"}'),
+(1118, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-14 00:02:32', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1119, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 00:03:08', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1120, 'U001', 'Super Admin', 'Admin', 'LOGIN', 'Admin logged in successfully', '113.211.212.42', '2026-03-14 00:03:25', '{\"userName\":\"Super Admin\"}'),
+(1121, 'U001', 'Super Admin', 'Admin', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 00:08:09', '{\"userName\":\"Super Admin\",\"role\":\"admin\"}'),
+(1122, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-14 00:08:15', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1123, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 00:08:49', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1124, 'U047', 'Wong Siew Fen', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-14 00:09:49', '{\"userName\":\"Wong Siew Fen\"}'),
+(1125, 'U047', 'Wong Siew Fen', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 00:10:35', '{\"userName\":\"Wong Siew Fen\",\"role\":\"student\"}'),
+(1126, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-14 00:10:41', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1127, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 00:11:27', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1128, 'U001', 'Super Admin', 'Admin', 'LOGIN', 'Admin logged in successfully', '113.211.212.42', '2026-03-14 00:11:33', '{\"userName\":\"Super Admin\"}'),
+(1129, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-14 00:12:30', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1130, 'U001', 'Super Admin', 'Admin', 'USER_CREATE', 'Created new Student: CHUN KIT WONG (ID: 26WP00001)', '113.211.212.42', '2026-03-14 00:27:16', '{\"newUserID\":\"U097\",\"newRoleID\":\"26WP00001\",\"newUserRole\":\"Student\",\"newUserName\":\"CHUN KIT WONG\",\"email\":\"wongck@student.tarc.edu.my\"}'),
+(1131, 'U001', 'Super Admin', 'Admin', 'USER_DELETE', 'Deleted user account: U097', '113.211.212.42', '2026-03-14 00:27:30', '{\"deletedUserID\":\"U097\",\"deletedUserRole\":\"Student\"}'),
+(1132, 'U001', 'Super Admin', 'Admin', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 00:27:37', '{\"userName\":\"Super Admin\",\"role\":\"admin\"}'),
+(1133, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGIN', 'Staff logged in successfully', '77.111.245.16', '2026-03-14 03:45:08', '{\"userName\":\"Dr. Aini Musa\"}'),
+(1134, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGOUT', 'User logged out', '77.111.245.16', '2026-03-14 03:46:04', '{\"userName\":\"Dr. Aini Musa\",\"role\":\"staff\"}'),
+(1135, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-14 10:52:41', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1136, 'U001', 'Super Admin', 'Admin', 'LOGIN', 'Admin logged in successfully', '113.211.212.42', '2026-03-14 10:53:18', '{\"userName\":\"Super Admin\"}'),
+(1137, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 11:06:31', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1138, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGIN', 'Staff logged in successfully', '113.211.212.42', '2026-03-14 11:06:38', '{\"userName\":\"Dr. Aini Musa\"}'),
+(1139, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 11:32:13', '{\"userName\":\"Dr. Aini Musa\",\"role\":\"staff\"}'),
+(1140, 'U001', 'Super Admin', 'Admin', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 11:32:17', '{\"userName\":\"Super Admin\",\"role\":\"admin\"}'),
+(1141, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-14 11:32:55', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1142, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 11:37:05', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1143, 'U001', 'Super Admin', 'Admin', 'LOGIN', 'Admin logged in successfully', '113.211.212.42', '2026-03-14 11:38:39', '{\"userName\":\"Super Admin\"}'),
+(1144, 'U001', 'Super Admin', 'Admin', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 11:41:33', '{\"userName\":\"Super Admin\",\"role\":\"admin\"}'),
+(1145, 'U001', 'Super Admin', 'Admin', 'LOGIN', 'Admin logged in successfully', '113.211.212.42', '2026-03-14 12:04:03', '{\"userName\":\"Super Admin\"}'),
+(1146, 'U001', 'Super Admin', 'Admin', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 12:17:15', '{\"userName\":\"Super Admin\",\"role\":\"admin\"}'),
+(1147, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.106.7', '2026-03-14 12:40:06', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1148, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGIN', 'Staff logged in successfully', '113.211.106.7', '2026-03-14 12:41:18', '{\"userName\":\"Dr. Aini Musa\"}'),
+(1149, 'U013', 'Arvind A/L Subramaniam', 'Student', 'ASSIGNMENT_SUBMIT', 'Student submitted assignment: DEMO ENGLISH for English for Tertiary Studies (BJEL1713) (2 files)', '113.211.106.7', '2026-03-14 12:49:23', '{\"assignmentID\":20,\"title\":\"DEMO ENGLISH\",\"courseID\":\"BJEL1713\",\"fileCount\":2,\"submissionStatus\":\"Submitted\"}'),
+(1150, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.106.7', '2026-03-14 12:58:10', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1151, 'U014', 'Divya A/P Kumar', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.106.7', '2026-03-14 12:58:19', '{\"userName\":\"Divya A\\/P Kumar\"}'),
+(1152, 'U014', 'Divya A/P Kumar', 'Student', 'LOGOUT', 'User logged out', '113.211.106.7', '2026-03-14 12:59:38', '{\"userName\":\"Divya A\\/P Kumar\",\"role\":\"student\"}'),
+(1153, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.106.7', '2026-03-14 12:59:47', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1154, 'U013', 'Arvind A/L Subramaniam', 'Student', 'ATTENDANCE', 'Student took attendance for English for Tertiary Studies (BJEL1713) - Status: Present', '113.211.106.7', '2026-03-14 13:01:27', '{\"scheduleID\":\"67\",\"courseID\":\"BJEL1713\",\"courseName\":\"English for Tertiary Studies\",\"date\":\"2026-03-14\",\"scanTime\":\"13:01:27\",\"status\":\"Present\"}'),
+(1155, 'U013', 'Arvind A/L Subramaniam', 'Student', 'ATTENDANCE', 'Student took attendance for English for Tertiary Studies (BJEL1713) - Status: Late', '113.211.106.7', '2026-03-14 13:06:35', '{\"scheduleID\":\"67\",\"courseID\":\"BJEL1713\",\"courseName\":\"English for Tertiary Studies\",\"date\":\"2026-03-14\",\"scanTime\":\"13:06:35\",\"status\":\"Late\"}'),
+(1156, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-14 13:07:29', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1157, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 13:07:33', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1158, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.106.7', '2026-03-14 13:07:57', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1159, 'U015', 'Teoh Kah Mun', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.106.7', '2026-03-14 13:08:07', '{\"userName\":\"Teoh Kah Mun\"}'),
+(1160, 'U015', 'Teoh Kah Mun', 'Student', 'LOGOUT', 'User logged out', '113.211.106.7', '2026-03-14 13:09:35', '{\"userName\":\"Teoh Kah Mun\",\"role\":\"student\"}'),
+(1161, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.106.7', '2026-03-14 13:09:46', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1162, '23WP12509', 'Unknown', '', 'PROFILE_UPDATE', 'Student removed their profile photo', '113.211.106.7', '2026-03-14 13:18:17', NULL),
+(1163, 'U002', 'Dr. Aini Musa', 'Staff', 'STUDENT_REMOVAL', 'Removed student Arvind A/L Subramaniam (23WP12509) from RSD Group A. Reason: Change course', '113.211.106.7', '2026-03-14 13:19:46', NULL),
+(1164, 'U002', 'Dr. Aini Musa', 'Staff', 'STUDENT_REINSTATEMENT', 'Reinstated student Arvind A/L Subramaniam (23WP12509) back to RSD Group A', '113.211.106.7', '2026-03-14 13:20:02', NULL),
+(1165, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-14 13:27:39', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1166, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 13:28:15', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1167, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-14 13:30:23', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1168, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.106.7', '2026-03-14 13:30:27', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1169, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 13:30:35', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1170, 'U015', 'Teoh Kah Mun', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.106.7', '2026-03-14 13:30:36', '{\"userName\":\"Teoh Kah Mun\"}'),
+(1171, 'U015', 'Teoh Kah Mun', 'Student', 'LOGOUT', 'User logged out', '113.211.106.7', '2026-03-14 13:31:04', '{\"userName\":\"Teoh Kah Mun\",\"role\":\"student\"}'),
+(1172, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-14 13:34:38', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1173, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGIN', 'Staff logged in successfully', '113.211.212.42', '2026-03-14 13:35:09', '{\"userName\":\"Dr. Aini Musa\"}'),
+(1174, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 13:35:59', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1175, 'U001', 'Super Admin', 'Admin', 'LOGIN', 'Admin logged in successfully', '113.211.212.42', '2026-03-14 13:36:11', '{\"userName\":\"Super Admin\"}'),
+(1176, 'U001', 'Super Admin', 'Admin', 'USER_DELETE', 'Deleted user account: U051', '113.211.212.42', '2026-03-14 13:37:04', '{\"deletedUserID\":\"U051\",\"deletedUserRole\":\"Student\"}'),
+(1177, 'U001', 'Super Admin', 'Admin', 'USER_CREATE', 'Created new Student: CHUN KIT WONG (ID: 26WP00001)', '113.211.212.42', '2026-03-14 13:38:57', '{\"newUserID\":\"U097\",\"newRoleID\":\"26WP00001\",\"newUserRole\":\"Student\",\"newUserName\":\"CHUN KIT WONG\",\"email\":\"wongck@student.tarc.edu.my\"}'),
+(1178, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 13:39:14', '{\"userName\":\"Dr. Aini Musa\",\"role\":\"staff\"}'),
+(1179, 'U097', 'CHUN KIT WONG', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-14 13:39:21', '{\"userName\":\"CHUN KIT WONG\"}'),
+(1180, 'U097', 'CHUN KIT WONG', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 13:39:54', '{\"userName\":\"CHUN KIT WONG\",\"role\":\"student\"}'),
+(1181, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-14 13:40:39', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1182, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 13:41:20', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1183, 'U001', 'Super Admin', 'Admin', 'LOGIN', 'Admin logged in successfully', '113.211.212.42', '2026-03-14 13:41:49', '{\"userName\":\"Super Admin\"}'),
+(1184, 'U001', 'Super Admin', 'Admin', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 13:46:46', '{\"userName\":\"Super Admin\",\"role\":\"admin\"}'),
+(1185, 'U060', 'Wong Chun Kit', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-14 13:48:30', '{\"userName\":\"Wong Chun Kit\"}'),
+(1186, 'U060', 'Wong Chun Kit', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 13:49:00', '{\"userName\":\"Wong Chun Kit\",\"role\":\"student\"}'),
+(1187, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-14 13:49:05', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1188, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 13:49:24', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1189, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-14 13:49:34', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1190, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 13:50:24', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1191, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGIN', 'Staff logged in successfully', '113.211.212.42', '2026-03-14 13:50:35', '{\"userName\":\"Dr. Aini Musa\"}'),
+(1192, 'U001', 'Super Admin', 'Admin', 'LOGIN', 'Admin logged in successfully', '113.211.212.42', '2026-03-14 13:52:11', '{\"userName\":\"Super Admin\"}'),
+(1193, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 13:55:21', '{\"userName\":\"Dr. Aini Musa\",\"role\":\"staff\"}'),
+(1194, 'U008', 'Dr. Wong Siew', 'Staff', 'LOGIN', 'Staff logged in successfully', '113.211.212.42', '2026-03-14 13:55:30', '{\"userName\":\"Dr. Wong Siew\"}'),
+(1195, 'U008', 'Dr. Wong Siew', 'Staff', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 13:58:15', '{\"userName\":\"Dr. Wong Siew\",\"role\":\"staff\"}'),
+(1196, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-14 13:58:28', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1197, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 14:06:53', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1198, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGIN', 'Staff logged in successfully', '113.211.212.42', '2026-03-14 14:07:00', '{\"userName\":\"Dr. Aini Musa\"}'),
+(1199, 'U001', 'Super Admin', 'Admin', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 14:07:38', '{\"userName\":\"Super Admin\",\"role\":\"admin\"}'),
+(1200, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.212.42', '2026-03-14 14:07:45', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1201, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 14:07:55', '{\"userName\":\"Dr. Aini Musa\",\"role\":\"staff\"}'),
+(1202, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGIN', 'Staff logged in successfully', '113.211.212.42', '2026-03-14 14:08:01', '{\"userName\":\"Dr. Aini Musa\"}'),
+(1203, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 14:09:50', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1204, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '113.211.106.7', '2026-03-14 14:10:42', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1205, 'U013', 'Arvind A/L Subramaniam', 'Student', 'ATTENDANCE', 'Student took attendance for English for Tertiary Studies (BJEL1713) - Status: Late', '113.211.106.7', '2026-03-14 14:10:59', '{\"scheduleID\":\"68\",\"courseID\":\"BJEL1713\",\"courseName\":\"English for Tertiary Studies\",\"date\":\"2026-03-14\",\"scanTime\":\"14:10:59\",\"status\":\"Late\"}'),
+(1206, 'U002', 'Dr. Aini Musa', 'Staff', 'LOGOUT', 'User logged out', '113.211.212.42', '2026-03-14 14:13:00', '{\"userName\":\"Dr. Aini Musa\",\"role\":\"staff\"}'),
+(1207, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGIN', 'Student logged in successfully', '::1', '2026-03-19 20:53:36', '{\"userName\":\"Arvind A\\/L Subramaniam\"}'),
+(1208, 'U013', 'Arvind A/L Subramaniam', 'Student', 'LOGOUT', 'User logged out', '::1', '2026-03-19 20:55:59', '{\"userName\":\"Arvind A\\/L Subramaniam\",\"role\":\"student\"}'),
+(1209, 'U001', 'Super Admin', 'Admin', 'LOGIN', 'Admin logged in successfully', '::1', '2026-03-19 20:56:06', '{\"userName\":\"Super Admin\"}'),
+(1210, 'U001', 'Super Admin', 'Admin', 'LOGOUT', 'User logged out', '::1', '2026-03-19 20:59:30', '{\"userName\":\"Super Admin\",\"role\":\"admin\"}'),
+(1211, 'U001', 'Super Admin', 'Admin', 'LOGIN', 'Admin logged in successfully', '::1', '2026-03-19 20:59:45', '{\"userName\":\"Super Admin\"}'),
+(1212, 'U001', 'Super Admin', 'Admin', 'USER_UPDATE', 'Updated Student: Ahmad Zaki Bin Rosliaa (ID: 23WP84917)', '::1', '2026-03-19 21:01:58', '{\"updatedUserID\":\"23WP84917\",\"updatedUserRole\":\"Student\",\"updatedUserName\":\"Ahmad Zaki Bin Rosliaa\",\"email\":\"ahmad.84917@student.tarc.edu.my\"}');
 
 -- --------------------------------------------------------
 
@@ -1111,12 +1302,15 @@ CREATE TABLE `announcements` (
 -- Dumping data for table `announcements`
 --
 
-INSERT INTO `announcements` (`id`, `title`, `body`, `target_audience`, `announcement_type`, `is_pinned`, `created_by`, `created_at`) VALUES
-(1, 'Welcome back!', 'Classes resume next Monday. Please check your schedules.', 'all', 'system', 0, NULL, '2025-11-10 05:15:47'),
-(2, 'Maintenance window', 'Portal downtime tonight from 11 PM to 12 AM for updates.', 'all', 'system', 0, NULL, '2025-11-10 05:15:47'),
-(3, 'Maintenance!!', 'System will undergo testing', 'student', 'system', 0, 'Super Admin', '2026-03-06 14:31:42'),
-(5, 'WONG CHUN KIT', 'Wong Chun Kit Student Centre is now open!! Please visit us', 'student', 'campus', 1, 'Super Admin', '2026-03-06 15:04:45'),
-(6, 'Testing 2', '\"At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.\"', 'all', 'system', 0, 'Super Admin', '2026-03-07 13:17:04');
+INSERT INTO `announcements` (`id`, `title`, `body`, `attachment`, `target_audience`, `announcement_type`, `is_pinned`, `created_by`, `created_at`) VALUES
+(1, 'Welcome back!', 'Classes resume next Monday. Please check your schedules.', NULL, 'all', 'system', 0, NULL, '2025-11-10 05:15:47'),
+(2, 'Maintenance window', 'Portal downtime tonight from 11 PM to 12 AM for updates.', NULL, 'all', 'system', 0, NULL, '2025-11-10 05:15:47'),
+(3, 'Maintenance!!', 'System will undergo testing', NULL, 'student', 'system', 0, 'Super Admin', '2026-03-06 14:31:42'),
+(5, 'WONG CHUN KIT', 'Wong Chun Kit Student Centre is now open!! Please visit us', NULL, 'student', 'campus', 1, 'Super Admin', '2026-03-06 15:04:45'),
+(6, 'Testing 2000000', '\"At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.\"', NULL, 'student', 'academic', 1, 'Super Admin', '2026-03-07 13:17:04'),
+(7, 'TESTING FOR MULTIPLE FILES', 'Please have a look at these files.😂😂💪💪✅✅', '[\"1773247109_0_favicon.png\",\"1773247109_1_Usability_of_Academic_Management_System.pdf\"]', 'all', 'academic', 0, 'Super Admin', '2026-03-11 16:38:29'),
+(8, 'aaa', 'aaaaaaa🙄🙄', NULL, 'all', 'system', 1, 'Super Admin', '2026-03-13 15:59:05'),
+(9, 'New Testing', 'This is a testing announcement', '[\"1773468390_0_student-attendance_backup2.txt\",\"1773468390_1_SPI_MidTerm.pdf\"]', 'student', 'system', 0, 'Super Admin', '2026-03-14 06:06:30');
 
 -- --------------------------------------------------------
 
@@ -1143,15 +1337,17 @@ CREATE TABLE `assignments` (
 
 INSERT INTO `assignments` (`assignmentID`, `courseID`, `staffID`, `tutGroup`, `title`, `description`, `attachmentPath`, `deadline`, `createdAt`, `isArchived`) VALUES
 (1, 'BJEL1713', 'S001', 'Group A', 'Lab Report 1', '1. Create a login page (login.php) that accepts a username and password.\r\n2. On success, start a Session and redirect to \'dashboard.php\'.\r\n3. Display \"Welcome, [Username]\" on the dashboard.\r\n4. Create a \'Logout\' button that destroys the session.', '1769883077_MOCK TEST.txt', '2026-02-02 12:00:00', '2026-01-31 18:11:17', 1),
-(2, 'MPU3103', 'S007', 'Group A', 'Etika Portfolio', 'Dear students, this is your assignment so do it and submit.', '1769888869_MOCK TEST.txt', '2026-02-02 04:47:00', '2026-01-31 19:47:49', 0),
+(2, 'MPU3103', 'S007', 'Group A', 'Etika Portfolio', 'Dear students, this is your assignment so do it and submit.', '1769888869_MOCK TEST.txt', '2026-02-02 04:47:00', '2026-01-31 19:47:49', 1),
 (3, 'BJEL1713', 'S001', 'Group A', 'English Article', 'Students pls do this work as part of your marks', '1770216608_1769883132_23WP12509_MOCK TEST.txt', '2026-02-05 10:00:00', '2026-02-04 14:50:08', 1),
 (5, 'BJEL1713', 'S001', 'Group A', 'Final', 'Students do your work.', '1771944323_BMCS3033_Tutorial2.pdf', '2026-02-25 23:59:00', '2026-02-24 14:45:23', 1),
 (10, 'BJEL1713', 'S001', 'Group B', 'English Grammar Exercise', 'Please do your exercise and submit', '1772206897_MyArrayList.pdf', '2026-02-28 21:30:00', '2026-02-27 15:41:37', 1),
-(11, 'BJEL1713', 'S001', 'Group B', 'English Presentation', 'Submit your PPT slides here', NULL, '2026-02-28 23:59:00', '2026-02-27 16:06:07', 0),
+(11, 'BJEL1713', 'S001', 'Group B', 'English Presentation', 'Submit your PPT slides here', NULL, '2026-02-28 23:59:00', '2026-02-27 16:06:07', 1),
 (12, 'BJEL1713', 'S001', 'Group B', 'English REPORT', 'DO YOUR WORK', NULL, '2026-02-28 23:59:00', '2026-02-27 16:19:27', 0),
 (13, 'BAIT2113', 'S001', 'Group A', 'WEB ASSIGNMENT', 'Do this work and submit it', NULL, '2026-03-08 23:59:00', '2026-03-07 09:41:05', 0),
 (14, 'BJEL1713', 'S001', 'Group A', 'William Shakespeare Novel', 'Students please do this work', NULL, '2026-03-07 21:35:00', '2026-03-07 13:32:45', 0),
-(17, 'MPU3103', 'S007', 'Group A', 'Projek Etika', 'Pelajar sila buat kerja anda', NULL, '2026-03-13 23:59:00', '2026-03-09 14:04:24', 0);
+(17, 'MPU3103', 'S007', 'Group A', 'Projek Etika', 'Pelajar sila buat kerja anda dan hantar cepat', NULL, '2026-03-14 23:59:00', '2026-03-09 14:04:24', 0),
+(18, 'BJEL1713', 'S001', 'Group B', 'English Essay', 'Please finish this essay', '1773327570_Cost-of-a-Data-Breach-Report-2024.pdf', '2026-03-13 23:59:00', '2026-03-12 14:59:29', 0),
+(20, 'BJEL1713', 'S001', 'Group A', 'DEMO ENGLISH', 'Student please do your work and submit (changed)', '1773463615_MEMOIRS OF A FLORAL FANTASY07 Feb 2026 08-00 PM13.pdf', '2026-03-18 23:59:00', '2026-03-14 04:46:55', 0);
 
 -- --------------------------------------------------------
 
@@ -1189,7 +1385,6 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (19, '23WP80803', 3, '2026-01-29', '08:03:28', 'Present'),
 (20, '23WP82178', 3, '2026-01-29', '08:04:42', 'Present'),
 (21, '23WP84917', 3, '2026-01-29', '08:12:09', 'Present'),
-(22, '23WP94665', 3, '2026-01-29', '08:05:47', 'Present'),
 (23, '23WP99001', 3, '2026-01-29', '08:14:27', 'Present'),
 (24, '23WP12509', 4, '2026-01-29', '10:10:00', 'Present'),
 (25, '23WP14406', 4, '2026-01-29', '10:20:14', 'Present'),
@@ -1210,7 +1405,6 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (40, '23WP80803', 4, '2026-01-29', '10:24:06', 'Late'),
 (41, '23WP82178', 4, '2026-01-29', '10:10:39', 'Present'),
 (42, '23WP84917', 4, '2026-01-29', '10:21:42', 'Present'),
-(43, '23WP94665', 4, '2026-01-29', '10:08:21', 'Present'),
 (44, '23WP99001', 4, '2026-01-29', '10:23:21', 'Present'),
 (45, '23WP12926', 21, '2026-01-26', '08:23:01', 'Present'),
 (46, '23WP20441', 21, '2026-01-26', '08:11:32', 'Present'),
@@ -1330,7 +1524,6 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (165, '23WP80803', 27, '2026-01-30', '08:18:45', 'Present'),
 (166, '23WP82178', 27, '2026-01-30', '08:24:04', 'Late'),
 (167, '23WP84917', 27, '2026-01-30', '08:10:03', 'Present'),
-(168, '23WP94665', 27, '2026-01-30', '08:04:32', 'Present'),
 (169, '23WP99001', 27, '2026-01-30', '08:01:51', 'Present'),
 (170, '23WP12509', 28, '2026-01-30', '10:26:25', 'Present'),
 (171, '23WP20606', 28, '2026-01-30', '10:27:52', 'Present'),
@@ -1349,7 +1542,6 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (184, '23WP80803', 28, '2026-01-30', '10:21:13', 'Present'),
 (185, '23WP82178', 28, '2026-01-30', '10:18:55', 'Late'),
 (186, '23WP84917', 28, '2026-01-30', '10:11:09', 'Present'),
-(187, '23WP94665', 28, '2026-01-30', '10:21:37', 'Present'),
 (188, '23WP99001', 28, '2026-01-30', '10:18:37', 'Present'),
 (189, '23WP12509', 29, '2026-01-26', '14:05:32', 'Present'),
 (190, '23WP14406', 29, '2026-01-26', '14:00:04', 'Present'),
@@ -1370,7 +1562,6 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (205, '23WP80803', 29, '2026-01-26', '14:00:53', 'Present'),
 (206, '23WP82178', 29, '2026-01-26', '14:23:38', 'Present'),
 (207, '23WP84917', 29, '2026-01-26', '14:07:08', 'Present'),
-(208, '23WP94665', 29, '2026-01-26', '14:23:26', 'Present'),
 (209, '23WP99001', 29, '2026-01-26', '14:02:41', 'Present'),
 (210, '23WP12509', 30, '2026-01-26', '16:02:54', 'Present'),
 (211, '23WP14406', 30, '2026-01-26', '16:09:26', 'Present'),
@@ -1391,7 +1582,6 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (226, '23WP80803', 30, '2026-01-26', '16:03:06', 'Present'),
 (227, '23WP82178', 30, '2026-01-26', '16:05:20', 'Present'),
 (228, '23WP84917', 30, '2026-01-26', '16:12:43', 'Present'),
-(229, '23WP94665', 30, '2026-01-26', '16:03:36', 'Present'),
 (230, '23WP99001', 30, '2026-01-26', '16:04:33', 'Present'),
 (231, '23WP12509', 35, '2026-01-27', '08:27:31', 'Present'),
 (232, '23WP14406', 35, '2026-01-27', '08:09:32', 'Present'),
@@ -1408,7 +1598,6 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (243, '23WP78708', 35, '2026-01-27', '08:05:43', 'Present'),
 (244, '23WP82178', 35, '2026-01-27', '08:23:09', 'Present'),
 (245, '23WP84917', 35, '2026-01-27', '08:02:27', 'Present'),
-(246, '23WP94665', 35, '2026-01-27', '08:21:05', 'Present'),
 (247, '23WP12509', 36, '2026-01-27', '10:11:55', 'Present'),
 (248, '23WP14406', 36, '2026-01-27', '10:05:03', 'Present'),
 (249, '23WP20606', 36, '2026-01-27', '10:22:51', 'Present'),
@@ -1427,7 +1616,6 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (262, '23WP80803', 36, '2026-01-27', '10:29:48', 'Present'),
 (263, '23WP82178', 36, '2026-01-27', '10:25:07', 'Present'),
 (264, '23WP84917', 36, '2026-01-27', '10:05:03', 'Present'),
-(265, '23WP94665', 36, '2026-01-27', '10:26:33', 'Present'),
 (266, '23WP99001', 36, '2026-01-27', '10:07:21', 'Present'),
 (267, '23WP12509', 37, '2026-01-28', '08:22:03', 'Present'),
 (268, '23WP20606', 37, '2026-01-28', '08:29:24', 'Present'),
@@ -1446,7 +1634,6 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (281, '23WP80803', 37, '2026-01-28', '08:16:38', 'Present'),
 (282, '23WP82178', 37, '2026-01-28', '08:28:58', 'Present'),
 (283, '23WP84917', 37, '2026-01-28', '08:08:58', 'Present'),
-(284, '23WP94665', 37, '2026-01-28', '08:26:08', 'Present'),
 (285, '23WP99001', 37, '2026-01-28', '08:18:57', 'Late'),
 (286, '23WP12509', 38, '2026-01-28', '10:00:30', 'Present'),
 (287, '23WP14406', 38, '2026-01-28', '10:08:46', 'Present'),
@@ -1467,7 +1654,6 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (302, '23WP80803', 38, '2026-01-28', '10:11:45', 'Present'),
 (303, '23WP82178', 38, '2026-01-28', '10:21:38', 'Present'),
 (304, '23WP84917', 38, '2026-01-28', '10:03:56', 'Present'),
-(305, '23WP94665', 38, '2026-01-28', '10:01:15', 'Present'),
 (306, '23WP12509', 39, '2026-01-27', '14:09:29', 'Present'),
 (307, '23WP14406', 39, '2026-01-27', '14:23:56', 'Present'),
 (308, '23WP20606', 39, '2026-01-27', '14:09:30', 'Present'),
@@ -1505,7 +1691,6 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (340, '23WP78708', 40, '2026-01-27', '16:17:23', 'Present'),
 (341, '23WP80803', 40, '2026-01-27', '16:20:58', 'Present'),
 (342, '23WP82178', 40, '2026-01-27', '16:08:04', 'Present'),
-(343, '23WP94665', 40, '2026-01-27', '16:12:44', 'Present'),
 (344, '23WP99001', 40, '2026-01-27', '16:13:52', 'Present'),
 (345, '23WP12509', 41, '2026-01-29', '14:16:18', 'Present'),
 (346, '23WP14406', 41, '2026-01-29', '14:00:18', 'Present'),
@@ -1524,7 +1709,6 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (359, '23WP80803', 41, '2026-01-29', '14:28:55', 'Present'),
 (360, '23WP82178', 41, '2026-01-29', '14:26:50', 'Present'),
 (361, '23WP84917', 41, '2026-01-29', '14:16:12', 'Present'),
-(362, '23WP94665', 41, '2026-01-29', '14:01:25', 'Present'),
 (363, '23WP12509', 42, '2026-01-29', '16:03:18', 'Present'),
 (364, '23WP14406', 42, '2026-01-29', '16:23:37', 'Present'),
 (365, '23WP20606', 42, '2026-01-29', '16:00:27', 'Present'),
@@ -1544,7 +1728,6 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (379, '23WP80803', 42, '2026-01-29', '16:29:24', 'Present'),
 (380, '23WP82178', 42, '2026-01-29', '16:06:12', 'Present'),
 (381, '23WP84917', 42, '2026-01-29', '16:02:51', 'Present'),
-(382, '23WP94665', 42, '2026-01-29', '16:00:26', 'Present'),
 (383, '23WP99001', 42, '2026-01-29', '16:18:39', 'Present'),
 (384, '23WP12509', 43, '2026-01-28', '14:10:56', 'Present'),
 (385, '23WP14406', 43, '2026-01-28', '14:12:04', 'Present'),
@@ -1565,7 +1748,6 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (400, '23WP80803', 43, '2026-01-28', '14:17:13', 'Present'),
 (401, '23WP82178', 43, '2026-01-28', '14:23:28', 'Present'),
 (402, '23WP84917', 43, '2026-01-28', '14:03:10', 'Present'),
-(403, '23WP94665', 43, '2026-01-28', '14:10:38', 'Present'),
 (404, '23WP12509', 44, '2026-01-28', '16:19:47', 'Present'),
 (405, '23WP14406', 44, '2026-01-28', '16:29:00', 'Present'),
 (406, '23WP20606', 44, '2026-01-28', '16:16:04', 'Present'),
@@ -1582,7 +1764,6 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (417, '23WP80803', 44, '2026-01-28', '16:27:21', 'Present'),
 (418, '23WP82178', 44, '2026-01-28', '16:01:25', 'Present'),
 (419, '23WP84917', 44, '2026-01-28', '16:05:32', 'Present'),
-(420, '23WP94665', 44, '2026-01-28', '16:15:02', 'Present'),
 (421, '23WP99001', 44, '2026-01-28', '16:03:59', 'Present'),
 (422, '23WP12509', 45, '2026-01-30', '14:03:22', 'Present'),
 (423, '23WP14406', 45, '2026-01-30', '14:11:31', 'Present'),
@@ -1602,7 +1783,6 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (437, '23WP80803', 45, '2026-01-30', '14:20:28', 'Present'),
 (438, '23WP82178', 45, '2026-01-30', '14:27:44', 'Present'),
 (439, '23WP84917', 45, '2026-01-30', '14:16:52', 'Present'),
-(440, '23WP94665', 45, '2026-01-30', '14:00:43', 'Present'),
 (441, '23WP12509', 46, '2026-01-30', '16:24:19', 'Present'),
 (442, '23WP14406', 46, '2026-01-30', '16:22:45', 'Present'),
 (443, '23WP20606', 46, '2026-01-30', '16:23:42', 'Present'),
@@ -1620,7 +1800,6 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (455, '23WP80803', 46, '2026-01-30', '16:08:35', 'Present'),
 (456, '23WP82178', 46, '2026-01-30', '16:29:27', 'Present'),
 (457, '23WP84917', 46, '2026-01-30', '16:23:58', 'Present'),
-(458, '23WP94665', 46, '2026-01-30', '16:13:02', 'Present'),
 (459, '23WP99001', 46, '2026-01-30', '16:05:53', 'Present'),
 (466, '23WP12926', 23, '2026-02-11', '20:15:42', 'Present'),
 (468, '23WP57187', 23, '2026-02-11', '21:20:28', 'Present'),
@@ -1636,7 +1815,6 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (479, '23WP84917', 28, '2026-02-13', '21:32:34', 'Present'),
 (484, '23WP99001', 28, '2026-02-13', '15:38:00', 'Present'),
 (485, '23WP12509', 28, '2026-02-13', '15:43:54', 'Present'),
-(487, '23WP94665', 28, '2026-02-13', '19:14:40', 'Present'),
 (497, '23WP12926', 21, '2026-03-02', '08:05:08', 'Present'),
 (498, '23WP20441', 21, '2026-03-02', '08:07:35', 'Present'),
 (499, '23WP21572', 21, '2026-03-02', '08:07:50', 'Present'),
@@ -1691,7 +1869,6 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (576, '23WP80803', 29, '2026-03-02', '14:03:30', 'Present'),
 (577, '23WP82178', 29, '2026-03-02', '14:05:20', 'Present'),
 (578, '23WP84917', 29, '2026-03-02', '14:09:49', 'Present'),
-(579, '23WP94665', 29, '2026-03-02', '14:08:35', 'Present'),
 (580, '23WP99001', 29, '2026-03-02', '14:04:57', 'Present'),
 (590, '23WP12509', 30, '2026-03-02', '16:06:54', 'Present'),
 (591, '23WP14406', 30, '2026-03-02', '16:06:43', 'Late'),
@@ -1779,7 +1956,8 @@ INSERT INTO `attendance` (`recordID`, `studentID`, `scheduleID`, `attendanceDate
 (750, '23WP79311', 26, '2026-03-04', '10:08:28', 'Present'),
 (751, '23WP79793', 26, '2026-03-04', '10:07:33', 'Late'),
 (752, '23WP82670', 26, '2026-03-04', '10:07:15', 'Present'),
-(753, '23WP96546', 26, '2026-03-04', '10:09:59', 'Present');
+(753, '23WP96546', 26, '2026-03-04', '10:09:59', 'Present'),
+(796, '23WP12509', 68, '2026-03-14', '14:10:59', 'Late');
 
 -- --------------------------------------------------------
 
@@ -1977,7 +2155,38 @@ INSERT INTO `attendance_sessions` (`sessionID`, `scheduleID`, `sessionDate`, `co
 (207, 22, '2026-03-09', '637124', 'CLOSED', '2026-03-09 13:31:41'),
 (208, 29, '2026-03-09', '209027', 'CLOSED', '2026-03-09 13:31:41'),
 (209, 30, '2026-03-09', '133762', 'CLOSED', '2026-03-09 13:31:41'),
-(211, 50, '2026-03-09', '807361', 'CLOSED', '2026-03-09 13:31:41');
+(211, 50, '2026-03-09', '807361', 'CLOSED', '2026-03-09 13:31:41'),
+(214, 25, '2026-03-11', '804013', 'CLOSED', '2026-03-11 15:59:43'),
+(215, 26, '2026-03-11', '546825', 'CLOSED', '2026-03-11 15:59:43'),
+(216, 37, '2026-03-11', '322088', 'CLOSED', '2026-03-11 15:59:43'),
+(217, 38, '2026-03-11', '969963', 'CLOSED', '2026-03-11 15:59:43'),
+(218, 43, '2026-03-11', '883553', 'CLOSED', '2026-03-11 15:59:43'),
+(219, 44, '2026-03-11', '507876', 'CLOSED', '2026-03-11 15:59:43'),
+(220, 54, '2026-03-11', '888720', 'CLOSED', '2026-03-11 15:59:43'),
+(221, 57, '2026-03-11', '919975', 'CLOSED', '2026-03-11 15:59:43'),
+(229, 3, '2026-03-12', '062445', 'CLOSED', '2026-03-12 03:59:28'),
+(230, 4, '2026-03-12', '631643', 'CLOSED', '2026-03-12 03:59:28'),
+(231, 51, '2026-03-12', '970881', 'CLOSED', '2026-03-12 03:59:28'),
+(232, 41, '2026-03-12', '100296', 'CLOSED', '2026-03-12 14:03:02'),
+(233, 42, '2026-03-12', '683077', 'CLOSED', '2026-03-12 14:03:02'),
+(234, 53, '2026-03-12', '114498', 'CLOSED', '2026-03-12 14:03:02'),
+(235, 23, '2026-03-10', '583947', 'CLOSED', '2026-03-11 06:59:00'),
+(236, 24, '2026-03-10', '271634', 'CLOSED', '2026-03-11 06:59:00'),
+(237, 35, '2026-03-10', '948302', 'CLOSED', '2026-03-11 06:59:00'),
+(238, 36, '2026-03-10', '463871', 'CLOSED', '2026-03-11 06:59:00'),
+(239, 39, '2026-03-10', '729415', 'CLOSED', '2026-03-11 06:59:00'),
+(240, 40, '2026-03-10', '315082', 'CLOSED', '2026-03-11 06:59:00'),
+(241, 52, '2026-03-10', '867293', 'CLOSED', '2026-03-11 06:59:00'),
+(242, 55, '2026-03-10', '142758', 'CLOSED', '2026-03-11 06:59:00'),
+(244, 27, '2026-03-13', '825513', 'CLOSED', '2026-03-13 13:17:18'),
+(245, 28, '2026-03-13', '358863', 'CLOSED', '2026-03-13 13:17:18'),
+(246, 45, '2026-03-13', '317775', 'CLOSED', '2026-03-13 13:17:18'),
+(247, 46, '2026-03-13', '512289', 'CLOSED', '2026-03-13 13:17:18'),
+(248, 56, '2026-03-13', '608120', 'CLOSED', '2026-03-13 13:17:18'),
+(249, 58, '2026-03-13', '503735', 'CLOSED', '2026-03-13 13:17:18'),
+(253, 68, '2026-03-14', '488920', 'OPEN', '2026-03-14 05:35:12'),
+(254, 3, '2026-03-19', '352432', 'CLOSED', '2026-03-19 12:55:37'),
+(255, 4, '2026-03-19', '552115', 'CLOSED', '2026-03-19 12:55:37');
 
 -- --------------------------------------------------------
 
@@ -2034,7 +2243,10 @@ INSERT INTO `class_group_removals` (`removalID`, `studentID`, `programID`, `tutG
 (1, '23WP27671', 'RSW', 'Group B', 'S007', 'Test', '2026-02-13 13:59:22', '2026-02-13 14:01:10', 'S007', 'Reinstated'),
 (2, '23WP12509', 'RSD', 'Group A', 'S007', 'Missing', '2026-02-13 14:59:25', '2026-02-13 15:00:11', 'S007', 'Reinstated'),
 (3, '23WP99001', 'RSD', 'Group A', 'S001', 'racist', '2026-02-14 13:56:42', '2026-02-14 13:56:54', 'S001', 'Reinstated'),
-(5, '23WP27671', 'RSW', 'Group B', 'S001', 'Wrong Class', '2026-02-27 21:34:10', '2026-02-27 21:34:15', 'S001', 'Reinstated');
+(5, '23WP27671', 'RSW', 'Group B', 'S001', 'Wrong Class', '2026-02-27 21:34:10', '2026-02-27 21:34:15', 'S001', 'Reinstated'),
+(6, '23WP14406', 'RSD', 'Group A', 'S007', 'TRY', '2026-03-13 15:14:01', '2026-03-13 15:16:54', 'S007', 'Reinstated'),
+(7, '23WP14406', 'RSD', 'Group A', 'S001', 'BAD student', '2026-03-13 15:19:45', '2026-03-13 15:24:44', 'S001', 'Reinstated'),
+(8, '23WP12509', 'RSD', 'Group A', 'S001', 'Change course', '2026-03-14 05:19:46', '2026-03-14 05:20:02', 'S001', 'Reinstated');
 
 -- --------------------------------------------------------
 
@@ -2094,7 +2306,8 @@ INSERT INTO `class_schedule` (`scheduleID`, `termID`, `programID`, `courseID`, `
 (55, 5, 'RSD', 'BAIT2023', 'Group A', 'S005', 'DK-A', 'Tuesday', '14:00:00', '16:00:00', 'Lecture', 14),
 (56, 5, 'RSD', 'BAIT2023', 'Group A', 'S005', 'LAB-A02', 'Friday', '09:00:00', '10:00:00', 'Lab', 14),
 (57, 5, 'RSD', 'BMIT2154', 'Group A', 'S006', 'DK-B', 'Wednesday', '14:00:00', '16:00:00', 'Lecture', 14),
-(58, 5, 'RSD', 'BMIT2154', 'Group A', 'S006', 'LAB-B02', 'Friday', '14:00:00', '16:00:00', 'Lab', 14);
+(58, 5, 'RSD', 'BMIT2154', 'Group A', 'S006', 'LAB-B02', 'Friday', '14:00:00', '16:00:00', 'Lab', 14),
+(68, NULL, 'RSD', 'BJEL1713', 'Group A', 'S001', 'TR-101', 'Saturday', '13:30:00', '14:30:00', 'Tutorial', 14);
 
 -- --------------------------------------------------------
 
@@ -2213,7 +2426,12 @@ INSERT INTO `course_offering` (`offeringID`, `courseID`, `programID`, `termID`, 
 (22, 'BAIT2004', 'RSD', 9, 1, 40, 'Open', '2026-02-28 03:28:59'),
 (23, 'BAIT2203', 'RSD', 9, 1, 40, 'Open', '2026-02-28 03:28:59'),
 (24, 'BAMS1623', 'RSD', 9, 1, 40, 'Open', '2026-02-28 03:28:59'),
-(25, 'BJEL1723', 'RSD', 9, 1, 40, 'Open', '2026-02-28 03:28:59');
+(25, 'BJEL1723', 'RSD', 9, 1, 40, 'Open', '2026-02-28 03:28:59'),
+(26, 'BACS1053', 'RSW', 11, 1, 40, 'Open', '2026-03-12 15:16:38'),
+(27, 'BAIT1043', 'RSW', 11, 1, 40, 'Open', '2026-03-12 15:16:38'),
+(28, 'BAMS1613', 'RSW', 11, 1, 40, 'Open', '2026-03-12 15:16:38'),
+(29, 'BMCS1024', 'RSW', 11, 1, 40, 'Open', '2026-03-12 15:16:38'),
+(30, 'MPU3302', 'RSW', 11, 1, 40, 'Open', '2026-03-12 15:16:38');
 
 -- --------------------------------------------------------
 
@@ -2237,10 +2455,16 @@ CREATE TABLE `course_registration` (
 INSERT INTO `course_registration` (`registrationID`, `studentID`, `offeringID`, `status`, `registeredAt`, `droppedAt`) VALUES
 (18, '23WP12509', 14, 'Registered', '2026-02-27 21:07:36', NULL),
 (19, '23WP12509', 15, 'Registered', '2026-02-27 21:07:20', NULL),
-(20, '23WP12509', 16, 'Registered', '2026-02-27 21:07:22', NULL),
-(21, '23WP12509', 17, 'Registered', '2026-02-27 20:52:27', NULL),
-(22, '23WP12509', 18, 'Registered', '2026-02-27 20:52:28', NULL),
-(23, '23WP12509', 19, 'Registered', '2026-02-27 21:07:24', NULL);
+(20, '23WP12509', 16, 'Registered', '2026-03-14 05:59:49', NULL),
+(21, '23WP12509', 17, 'Registered', '2026-03-14 05:59:50', NULL),
+(22, '23WP12509', 18, 'Registered', '2026-03-14 05:59:52', NULL),
+(23, '23WP12509', 19, 'Registered', '2026-03-14 05:59:54', NULL),
+(34, '23WP80803', 14, 'Registered', '2026-03-13 16:10:01', NULL),
+(35, '23WP80803', 15, 'Registered', '2026-03-13 16:10:01', NULL),
+(36, '23WP80803', 16, 'Registered', '2026-03-13 16:10:01', NULL),
+(37, '23WP80803', 17, 'Registered', '2026-03-13 16:10:01', NULL),
+(38, '23WP80803', 18, 'Dropped', '2026-03-13 16:10:01', '2026-03-13 16:10:17'),
+(39, '23WP80803', 19, 'Dropped', '2026-03-13 16:10:08', '2026-03-13 16:10:15');
 
 -- --------------------------------------------------------
 
@@ -2270,9 +2494,9 @@ INSERT INTO `facility` (`facilityID`, `facilityName`, `type`, `location`, `capac
 ('LAB-A01', 'Computer Lab 1', 'Lab', 'Block A, Lvl 2', 30, 'Active'),
 ('LAB-A02', 'Software Eng. Lab', 'Lab', 'Block A, Lvl 2', 40, 'Active'),
 ('LAB-B01', 'Networking Lab', 'Lab', 'Block B, Lvl 1', 35, 'Active'),
-('LAB-B02', 'Multimedia Lab', 'Lab', 'Block B, Lvl 1', 35, 'Active'),
+('LAB-B02', 'Multimedia Lab', 'Lab', 'Block B, Lvl 1', 35, 'Closed'),
 ('LAB-C01', 'General IT Lab', 'Lab', 'Block C, Lvl 3', 60, 'Active'),
-('MR-01', 'Meeting Room 1', 'Meeting', 'Block A, Lvl 3', 10, 'Active'),
+('MR-01', 'Meeting Room 1', 'Meeting', 'Block A, Lvl 3', 10, 'Maintenance'),
 ('MR-02', 'Meeting Room 2', 'Meeting', 'Block B, Lvl 2', 8, 'Active'),
 ('PPT-01', 'Ping Pong Table 1', 'Sport', 'Sports Complex, Lvl 1', 4, 'Active'),
 ('PPT-02', 'Ping Pong Table 2', 'Sport', 'Sports Complex, Lvl 1', 4, 'Active'),
@@ -2310,7 +2534,11 @@ INSERT INTO `facility_booking` (`bookingID`, `facilityID`, `userID`, `userRole`,
 (8, 'BC-02', '23WP12509', 'Student', '2026-03-02', '08:00:00', '10:00:00', '', 'Active', '2026-02-27 20:57:08'),
 (9, 'LAB-C01', 'S001', 'Staff', '2026-03-02', '08:00:00', '10:00:00', '', 'Active', '2026-02-28 05:21:16'),
 (10, 'PPT-02', '23WP12509', 'Student', '2026-03-09', '08:00:00', '09:00:00', '', 'Active', '2026-03-07 17:59:01'),
-(11, 'BC-01', '23WP12509', 'Student', '2026-03-11', '08:00:00', '09:00:00', '', 'Active', '2026-03-09 14:02:45');
+(11, 'BC-01', '23WP12509', 'Student', '2026-03-11', '08:00:00', '09:00:00', '', 'Active', '2026-03-09 14:02:45'),
+(12, 'LAB-B01', '23WP12509', 'Student', '2026-03-14', '08:00:00', '10:00:00', '', 'Cancelled', '2026-03-13 15:43:40'),
+(13, 'LAB-C01', 'S001', 'Staff', '2026-03-14', '08:00:00', '10:00:00', '', 'Active', '2026-03-13 15:48:08'),
+(14, 'LAB-B01', 'S001', 'Staff', '2026-03-15', '08:00:00', '10:00:00', '', 'Active', '2026-03-14 05:21:31'),
+(15, 'LAB-C01', 'S007', 'Staff', '2026-03-16', '08:00:00', '10:00:00', '', 'Cancelled', '2026-03-14 05:55:48');
 
 -- --------------------------------------------------------
 
@@ -2331,16 +2559,19 @@ CREATE TABLE `login_attempts` (
 --
 
 INSERT INTO `login_attempts` (`id`, `attempted_user`, `attempt_counts`, `locked_until`, `last_attempt`) VALUES
-(1, '23WP12509', 5, NULL, '2026-03-09 22:34:39'),
+(1, '23WP12509', 5, NULL, '2026-03-19 20:53:36'),
 (3, '23WP21572', 5, NULL, '2026-02-28 05:55:13'),
 (8, 'aa', 4, NULL, '2026-02-28 05:47:04'),
-(13, 'ADM01', 5, NULL, '2026-03-09 22:32:43'),
-(14, 'S001', 5, NULL, '2026-03-09 22:26:09'),
-(19, '23WP12926', 5, NULL, '2026-03-07 21:34:33'),
+(13, 'ADM01', 5, NULL, '2026-03-19 20:59:45'),
+(14, 'S001', 5, NULL, '2026-03-14 14:08:01'),
+(19, '23WP12926', 5, NULL, '2026-03-14 12:58:19'),
 (47, 'aaa', 4, NULL, '2026-02-28 12:57:18'),
 (48, '23WP20441', 1, '2026-02-28 13:03:06', '2026-02-28 12:58:06'),
-(78, 'S007', 5, NULL, '2026-03-09 22:03:37'),
-(141, '23WP14406', 5, NULL, '2026-03-07 21:43:15');
+(78, 'S007', 5, NULL, '2026-03-14 13:55:30'),
+(141, '23WP14406', 5, NULL, '2026-03-14 13:30:36'),
+(204, '26WP00001', 5, NULL, '2026-03-14 13:39:21'),
+(212, '23WP21001', 5, NULL, '2026-03-14 13:48:30'),
+(215, '23WP80803', 5, NULL, '2026-03-14 00:09:49');
 
 -- --------------------------------------------------------
 
@@ -2366,7 +2597,7 @@ CREATE TABLE `notifications` (
 
 INSERT INTO `notifications` (`id`, `userID`, `userRole`, `type`, `title`, `message`, `link`, `isRead`, `createdAt`) VALUES
 (1, '23WP12509', 'student', 'new_assignment', 'New Assignment: Kerja Kursus', 'Due 9 Mar 2026', 'student-assignments.php', 1, '2026-03-07 16:11:19'),
-(2, '23WP14406', 'student', 'new_assignment', 'New Assignment: Kerja Kursus', 'Due 9 Mar 2026', 'student-assignments.php', 0, '2026-03-07 16:11:19'),
+(2, '23WP14406', 'student', 'new_assignment', 'New Assignment: Kerja Kursus', 'Due 9 Mar 2026', 'student-assignments.php', 1, '2026-03-07 16:11:19'),
 (3, '23WP20606', 'student', 'new_assignment', 'New Assignment: Kerja Kursus', 'Due 9 Mar 2026', 'student-assignments.php', 0, '2026-03-07 16:11:19'),
 (4, '23WP21001', 'student', 'new_assignment', 'New Assignment: Kerja Kursus', 'Due 9 Mar 2026', 'student-assignments.php', 0, '2026-03-07 16:11:19'),
 (5, '23WP24179', 'student', 'new_assignment', 'New Assignment: Kerja Kursus', 'Due 9 Mar 2026', 'student-assignments.php', 0, '2026-03-07 16:11:19'),
@@ -2388,7 +2619,7 @@ INSERT INTO `notifications` (`id`, `userID`, `userRole`, `type`, `title`, `messa
 (21, '23WP94665', 'student', 'new_assignment', 'New Assignment: Kerja Kursus', 'Due 9 Mar 2026', 'student-assignments.php', 0, '2026-03-07 16:11:19'),
 (22, '23WP99001', 'student', 'new_assignment', 'New Assignment: Kerja Kursus', 'Due 9 Mar 2026', 'student-assignments.php', 0, '2026-03-07 16:11:19'),
 (23, '23WP12509', 'student', 'new_assignment', 'New Assignment: Kerja Kursus', 'Due 9 Mar 2026', 'student-assignments.php', 1, '2026-03-07 16:23:34'),
-(24, '23WP14406', 'student', 'new_assignment', 'New Assignment: Kerja Kursus', 'Due 9 Mar 2026', 'student-assignments.php', 0, '2026-03-07 16:23:34'),
+(24, '23WP14406', 'student', 'new_assignment', 'New Assignment: Kerja Kursus', 'Due 9 Mar 2026', 'student-assignments.php', 1, '2026-03-07 16:23:34'),
 (25, '23WP20606', 'student', 'new_assignment', 'New Assignment: Kerja Kursus', 'Due 9 Mar 2026', 'student-assignments.php', 0, '2026-03-07 16:23:34'),
 (26, '23WP21001', 'student', 'new_assignment', 'New Assignment: Kerja Kursus', 'Due 9 Mar 2026', 'student-assignments.php', 0, '2026-03-07 16:23:34'),
 (27, '23WP24179', 'student', 'new_assignment', 'New Assignment: Kerja Kursus', 'Due 9 Mar 2026', 'student-assignments.php', 0, '2026-03-07 16:23:34'),
@@ -2412,7 +2643,7 @@ INSERT INTO `notifications` (`id`, `userID`, `userRole`, `type`, `title`, `messa
 (45, '23WP12509', 'student', 'booking_update', 'Booking Confirmed: Ping Pong Table 2', '9 Mar 2026 • 8:00AM-9:00AM', 'resource-booking.php', 1, '2026-03-07 17:59:01'),
 (46, '23WP12509', 'student', 'booking_update', 'Booking Confirmed: Badminton Court 1', '11 Mar 2026 • 8:00AM-9:00AM', 'resource-booking.php', 1, '2026-03-09 14:02:45'),
 (47, '23WP12509', 'student', 'new_assignment', 'New Assignment: Projek Etika', 'Due 13 Mar 2026', 'student-assignments.php', 1, '2026-03-09 14:04:24'),
-(48, '23WP14406', 'student', 'new_assignment', 'New Assignment: Projek Etika', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-09 14:04:24'),
+(48, '23WP14406', 'student', 'new_assignment', 'New Assignment: Projek Etika', 'Due 13 Mar 2026', 'student-assignments.php', 1, '2026-03-09 14:04:24'),
 (49, '23WP20606', 'student', 'new_assignment', 'New Assignment: Projek Etika', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-09 14:04:24'),
 (50, '23WP21001', 'student', 'new_assignment', 'New Assignment: Projek Etika', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-09 14:04:24'),
 (51, '23WP24179', 'student', 'new_assignment', 'New Assignment: Projek Etika', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-09 14:04:24'),
@@ -2432,7 +2663,90 @@ INSERT INTO `notifications` (`id`, `userID`, `userRole`, `type`, `title`, `messa
 (65, '23WP82178', 'student', 'new_assignment', 'New Assignment: Projek Etika', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-09 14:04:24'),
 (66, '23WP84917', 'student', 'new_assignment', 'New Assignment: Projek Etika', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-09 14:04:24'),
 (67, '23WP94665', 'student', 'new_assignment', 'New Assignment: Projek Etika', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-09 14:04:24'),
-(68, '23WP99001', 'student', 'new_assignment', 'New Assignment: Projek Etika', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-09 14:04:24');
+(68, '23WP99001', 'student', 'new_assignment', 'New Assignment: Projek Etika', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-09 14:04:24'),
+(69, '23WP12926', 'student', 'new_assignment', 'New Assignment: English Essay', 'Due 13 Mar 2026', 'student-assignments.php', 1, '2026-03-12 14:59:29'),
+(70, '23WP20441', 'student', 'new_assignment', 'New Assignment: English Essay', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-12 14:59:29'),
+(71, '23WP21572', 'student', 'new_assignment', 'New Assignment: English Essay', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-12 14:59:29'),
+(72, '23WP21706', 'student', 'new_assignment', 'New Assignment: English Essay', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-12 14:59:29'),
+(73, '23WP27671', 'student', 'new_assignment', 'New Assignment: English Essay', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-12 14:59:29'),
+(74, '23WP32466', 'student', 'new_assignment', 'New Assignment: English Essay', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-12 14:59:29'),
+(75, '23WP37638', 'student', 'new_assignment', 'New Assignment: English Essay', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-12 14:59:29'),
+(76, '23WP37849', 'student', 'new_assignment', 'New Assignment: English Essay', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-12 14:59:29'),
+(77, '23WP38477', 'student', 'new_assignment', 'New Assignment: English Essay', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-12 14:59:29'),
+(78, '23WP40593', 'student', 'new_assignment', 'New Assignment: English Essay', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-12 14:59:29'),
+(79, '23WP57187', 'student', 'new_assignment', 'New Assignment: English Essay', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-12 14:59:29'),
+(80, '23WP57467', 'student', 'new_assignment', 'New Assignment: English Essay', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-12 14:59:29'),
+(81, '23WP61618', 'student', 'new_assignment', 'New Assignment: English Essay', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-12 14:59:29'),
+(82, '23WP61839', 'student', 'new_assignment', 'New Assignment: English Essay', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-12 14:59:29'),
+(83, '23WP71365', 'student', 'new_assignment', 'New Assignment: English Essay', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-12 14:59:29'),
+(84, '23WP79311', 'student', 'new_assignment', 'New Assignment: English Essay', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-12 14:59:29'),
+(85, '23WP79793', 'student', 'new_assignment', 'New Assignment: English Essay', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-12 14:59:29'),
+(86, '23WP82670', 'student', 'new_assignment', 'New Assignment: English Essay', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-12 14:59:29'),
+(87, '23WP96546', 'student', 'new_assignment', 'New Assignment: English Essay', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-12 14:59:29'),
+(88, '23WP12926', 'student', 'new_assignment', 'New Assignment: Ujian Semester', 'Due 13 Mar 2026', 'student-assignments.php', 1, '2026-03-13 15:09:24'),
+(89, '23WP20441', 'student', 'new_assignment', 'New Assignment: Ujian Semester', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-13 15:09:24'),
+(90, '23WP21572', 'student', 'new_assignment', 'New Assignment: Ujian Semester', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-13 15:09:24'),
+(91, '23WP21706', 'student', 'new_assignment', 'New Assignment: Ujian Semester', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-13 15:09:24'),
+(92, '23WP27671', 'student', 'new_assignment', 'New Assignment: Ujian Semester', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-13 15:09:24'),
+(93, '23WP32466', 'student', 'new_assignment', 'New Assignment: Ujian Semester', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-13 15:09:24'),
+(94, '23WP37638', 'student', 'new_assignment', 'New Assignment: Ujian Semester', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-13 15:09:24'),
+(95, '23WP37849', 'student', 'new_assignment', 'New Assignment: Ujian Semester', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-13 15:09:24'),
+(96, '23WP38477', 'student', 'new_assignment', 'New Assignment: Ujian Semester', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-13 15:09:24'),
+(97, '23WP40593', 'student', 'new_assignment', 'New Assignment: Ujian Semester', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-13 15:09:24'),
+(98, '23WP57187', 'student', 'new_assignment', 'New Assignment: Ujian Semester', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-13 15:09:24'),
+(99, '23WP57467', 'student', 'new_assignment', 'New Assignment: Ujian Semester', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-13 15:09:24'),
+(100, '23WP61618', 'student', 'new_assignment', 'New Assignment: Ujian Semester', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-13 15:09:24'),
+(101, '23WP61839', 'student', 'new_assignment', 'New Assignment: Ujian Semester', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-13 15:09:24'),
+(102, '23WP71365', 'student', 'new_assignment', 'New Assignment: Ujian Semester', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-13 15:09:24'),
+(103, '23WP79311', 'student', 'new_assignment', 'New Assignment: Ujian Semester', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-13 15:09:24'),
+(104, '23WP79793', 'student', 'new_assignment', 'New Assignment: Ujian Semester', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-13 15:09:24'),
+(105, '23WP82670', 'student', 'new_assignment', 'New Assignment: Ujian Semester', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-13 15:09:24'),
+(106, '23WP96546', 'student', 'new_assignment', 'New Assignment: Ujian Semester', 'Due 13 Mar 2026', 'student-assignments.php', 0, '2026-03-13 15:09:24'),
+(107, '23WP12509', 'student', 'booking_update', 'Booking Confirmed: Networking Lab', '14 Mar 2026 • 8:00AM-10:00AM', 'resource-booking.php', 1, '2026-03-13 15:43:40'),
+(108, 'S001', 'staff', 'booking_update', 'Booking Confirmed: General IT Lab', '14 Mar 2026 • 8:00AM-10:00AM', 'resource-booking.php', 1, '2026-03-13 15:48:08'),
+(109, '23WP12509', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 1, '2026-03-14 04:46:55'),
+(110, '23WP14406', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(111, '23WP20606', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(112, '23WP21001', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(113, '23WP24179', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(114, '23WP24747', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(115, '23WP27426', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(116, '23WP31454', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(117, '23WP34128', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(118, '23WP34773', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(119, '23WP47754', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(120, '23WP51727', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(121, '23WP56143', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(122, '23WP69300', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(123, '23WP73033', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(124, '23WP77365', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(125, '23WP78708', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(126, '23WP80803', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(127, '23WP82178', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(128, '23WP84917', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(129, '23WP94665', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(130, '23WP99001', 'student', 'new_assignment', 'New Assignment: DEMO ENGLISH', 'Due 15 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:46:55'),
+(131, '23WP12926', 'student', 'new_assignment', 'New Assignment: DELETE', 'Due 25 Mar 2026', 'student-assignments.php', 1, '2026-03-14 04:57:54'),
+(132, '23WP20441', 'student', 'new_assignment', 'New Assignment: DELETE', 'Due 25 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:57:54'),
+(133, '23WP21572', 'student', 'new_assignment', 'New Assignment: DELETE', 'Due 25 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:57:54'),
+(134, '23WP21706', 'student', 'new_assignment', 'New Assignment: DELETE', 'Due 25 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:57:54'),
+(135, '23WP27671', 'student', 'new_assignment', 'New Assignment: DELETE', 'Due 25 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:57:54'),
+(136, '23WP32466', 'student', 'new_assignment', 'New Assignment: DELETE', 'Due 25 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:57:54'),
+(137, '23WP37638', 'student', 'new_assignment', 'New Assignment: DELETE', 'Due 25 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:57:54'),
+(138, '23WP37849', 'student', 'new_assignment', 'New Assignment: DELETE', 'Due 25 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:57:54'),
+(139, '23WP38477', 'student', 'new_assignment', 'New Assignment: DELETE', 'Due 25 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:57:54'),
+(140, '23WP40593', 'student', 'new_assignment', 'New Assignment: DELETE', 'Due 25 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:57:54'),
+(141, '23WP57187', 'student', 'new_assignment', 'New Assignment: DELETE', 'Due 25 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:57:54'),
+(142, '23WP57467', 'student', 'new_assignment', 'New Assignment: DELETE', 'Due 25 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:57:54'),
+(143, '23WP61618', 'student', 'new_assignment', 'New Assignment: DELETE', 'Due 25 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:57:54'),
+(144, '23WP61839', 'student', 'new_assignment', 'New Assignment: DELETE', 'Due 25 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:57:54'),
+(145, '23WP71365', 'student', 'new_assignment', 'New Assignment: DELETE', 'Due 25 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:57:54'),
+(146, '23WP79311', 'student', 'new_assignment', 'New Assignment: DELETE', 'Due 25 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:57:54'),
+(147, '23WP79793', 'student', 'new_assignment', 'New Assignment: DELETE', 'Due 25 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:57:54'),
+(148, '23WP82670', 'student', 'new_assignment', 'New Assignment: DELETE', 'Due 25 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:57:54'),
+(149, '23WP96546', 'student', 'new_assignment', 'New Assignment: DELETE', 'Due 25 Mar 2026', 'student-assignments.php', 0, '2026-03-14 04:57:54'),
+(150, 'S001', 'staff', 'booking_update', 'Booking Confirmed: Networking Lab', '15 Mar 2026 • 8:00AM-10:00AM', 'resource-booking.php', 1, '2026-03-14 05:21:31'),
+(151, 'S007', 'staff', 'booking_update', 'Booking Confirmed: General IT Lab', '16 Mar 2026 • 8:00AM-10:00AM', 'resource-booking.php', 0, '2026-03-14 05:55:48');
 
 -- --------------------------------------------------------
 
@@ -2595,7 +2909,9 @@ INSERT INTO `replacement_request` (`replacementID`, `scheduleID`, `originalDate`
 (8, 23, '2026-02-10', 'S001', '2026-02-09', '11:00 - 13:00', 'DK-A', 'Emergency', '', 'Approved', '2026-02-08 19:52:12', '2026-02-08 19:51:56'),
 (9, 27, '2026-02-13', 'S001', '2026-02-17', '11:00 - 13:00', 'DK-B', 'Medical Leave', 'assign dkb because dka having speech today, sorry for the trouble', 'Approved', '2026-02-09 13:33:22', '2026-02-09 13:31:48'),
 (10, 23, '2026-02-17', 'S001', '2026-02-11', '20:00 - 22:00', 'DK-A', 'Medical Leave', '', 'Approved', '2026-02-11 12:15:08', '2026-02-11 12:14:55'),
-(14, 23, '2026-03-03', 'S001', '2026-03-06', '11:00 - 13:00', 'DK-B', 'Medical Leave', 'Having speeches so venue needed to be changed.', 'Approved', '2026-02-28 05:13:21', '2026-02-28 05:11:55');
+(14, 23, '2026-03-03', 'S001', '2026-03-06', '11:00 - 13:00', 'DK-B', 'Medical Leave', 'Having speeches so venue needed to be changed.', 'Approved', '2026-02-28 05:13:21', '2026-02-28 05:11:55'),
+(15, 27, '2026-03-13', 'S001', '2026-03-16', '08:00 - 10:00', 'DK-A', 'Medical Leave', 'ok', 'Approved', '2026-03-13 15:59:40', '2026-03-13 15:47:26'),
+(16, 28, '2026-03-13', 'S001', '2026-03-16', '10:00 - 11:00', 'DK-A', 'Medical Leave', '', 'Approved', '2026-03-14 05:52:30', '2026-03-14 05:51:58');
 
 -- --------------------------------------------------------
 
@@ -2677,8 +2993,8 @@ CREATE TABLE `student` (
 --
 
 INSERT INTO `student` (`studentID`, `userID`, `studentName`, `email`, `contactNo`, `tutGroup`, `programID`, `currentYear`, `currentSemester`, `studentImage`) VALUES
-('23WP12509', 'U013', 'Arvind A/L Subramaniam', 'arvind.12509@student.tarc.edu.my', '012-22622267', 'Group A', 'RSD', 1, 1, 'profile_23WP12509_1772203939.png'),
-('23WP12926', 'U014', 'Divya A/P Kumar', 'divya.12926@student.tarc.edu.my', '012-9876543', 'Group B', 'RSW', 1, 1, 'profile_23WP12926_1772228255.png'),
+('23WP12509', 'U013', 'Arvind A/L Subramaniam', 'arvind.12509@student.tarc.edu.my', '012-22622267', 'Group A', 'RSD', 1, 1, NULL),
+('23WP12926', 'U014', 'Divya A/P Kumar', 'divya.12926@student.tarc.edu.my', '012-9876543', 'Group B', 'RSW', 1, 1, 'profile_23WP12926_1773328497.jpg'),
 ('23WP14406', 'U015', 'Teoh Kah Mun', 'teoh.14406@student.tarc.edu.my', '012-3456789', 'Group A', 'RSD', 1, 1, 'default_avatar.png'),
 ('23WP20441', 'U016', 'Puteri Balqis Binti Mahadzir', 'puteri.20441@student.tarc.edu.my', '012-9876543', 'Group B', 'RSW', 1, 1, 'default_avatar.png'),
 ('23WP20606', 'U017', 'Karthik A/L Anuar', 'karthik.20606@student.tarc.edu.my', '012-3456789', 'Group A', 'RSD', 1, 1, 'default_avatar.png'),
@@ -2714,10 +3030,10 @@ INSERT INTO `student` (`studentID`, `userID`, `studentName`, `email`, `contactNo
 ('23WP80803', 'U047', 'Wong Siew Fen', 'wong.80803@student.tarc.edu.my', '012-3456789', 'Group A', 'RSD', 1, 1, 'default_avatar.png'),
 ('23WP82178', 'U048', 'Anjali A/P Mohan', 'anjali.82178@student.tarc.edu.my', '012-3456789', 'Group A', 'RSD', 1, 1, 'default_avatar.png'),
 ('23WP82670', 'U049', 'Liew Chee Keong', 'liew.82670@student.tarc.edu.my', '012-9876543', 'Group B', 'RSW', 1, 1, 'default_avatar.png'),
-('23WP84917', 'U050', 'Ahmad Zaki Bin Rosli', 'ahmad.84917@student.tarc.edu.my', '012-3456789', 'Group A', 'RSD', 1, 1, 'default_avatar.png'),
-('23WP94665', 'U051', 'Ahmad Syahmi Bin Mohd Rizal', 'ahmad.94665@student.tarc.edu.my', '012-3456789', 'Group A', 'RSD', 1, 1, 'default_avatar.png'),
+('23WP84917', 'U050', 'Ahmad Zaki Bin Rosliaa', 'ahmad.84917@student.tarc.edu.my', '012-3456789', 'Group A', 'RSD', 1, 1, 'default_avatar.png'),
 ('23WP96546', 'U052', 'Noraini Binti Abdullah', 'noraini.96546@student.tarc.edu.my', '012-9876543', 'Group B', 'RSW', 1, 1, 'default_avatar.png'),
-('23WP99001', 'U057', 'Alex Chen Wei Jie', 'alex.99001@student.tarc.edu.my', '012-3334455', 'Group A', 'RSD', 1, 1, 'default_avatar.png');
+('23WP99001', 'U057', 'Alex Chen Wei Jie', 'alex.99001@student.tarc.edu.my', '012-3334455', 'Group A', 'RSD', 1, 1, 'default_avatar.png'),
+('26WP00001', 'U097', 'CHUN KIT WONG', 'wongck@student.tarc.edu.my', NULL, 'Group A', 'RSD', 1, 1, 'default_avatar.png');
 
 -- --------------------------------------------------------
 
@@ -2814,7 +3130,9 @@ INSERT INTO `submissions` (`submissionID`, `assignmentID`, `studentID`, `filePat
 (8, 12, '23WP12926', '1772209807_23WP12926_1772206897_MyArrayList.pdf', '2026-02-28 00:30:07', 50, 'TRY HARDER', 'Graded'),
 (9, 14, '23WP12509', '1772890452_23WP12509_Ganesha - Week 4.pdf', '2026-03-07 21:34:12', NULL, NULL, 'Submitted'),
 (10, 5, '23WP14406', '1772891020_23WP14406_Ganesha - Week 4.pdf', '2026-03-07 21:43:40', NULL, NULL, 'Late'),
-(11, 17, '23WP12509', '1773066227_23WP12509_Screenshot 2026-03-07 214625.png', '2026-03-09 22:23:47', 90, 'GOOD WORK', 'Graded');
+(11, 17, '23WP12509', '1773066227_23WP12509_Screenshot 2026-03-07 214625.png', '2026-03-09 22:23:47', 90, 'GOOD WORK', 'Graded'),
+(12, 18, '23WP12926', '1773327690_23WP12926_Monthly Attendance Summary - English for Tertiary Studies.pdf', '2026-03-12 23:01:31', 100, 'Very good divya', 'Graded'),
+(14, 20, '23WP12509', '1773463763_23WP12509_ChuaJianXi.GaneshaA_LBhaskaran.LeeGuanYi.YongChunHou.docx.pdf', '2026-03-14 12:49:23', 65, 'Good Work', 'Graded');
 
 -- --------------------------------------------------------
 
@@ -2841,7 +3159,10 @@ INSERT INTO `submission_files` (`fileID`, `submissionID`, `filePath`, `originalN
 (7, 9, '1772890452_23WP12509_Ganesha - Week 4.pdf', 'Ganesha - Week 4.pdf', '2026-03-07 13:34:12'),
 (8, 10, '1772891020_23WP14406_Ganesha - Week 4.pdf', 'Ganesha - Week 4.pdf', '2026-03-07 13:43:40'),
 (9, 11, '1773066227_23WP12509_Screenshot 2026-03-07 214625.png', 'Screenshot 2026-03-07 214625.png', '2026-03-09 14:23:47'),
-(10, 11, '1773066227_23WP12509_Screenshot 2026-03-07 214611.png', 'Screenshot 2026-03-07 214611.png', '2026-03-09 14:23:47');
+(10, 11, '1773066227_23WP12509_Screenshot 2026-03-07 214611.png', 'Screenshot 2026-03-07 214611.png', '2026-03-09 14:23:47'),
+(11, 12, '1773327690_23WP12926_Monthly Attendance Summary - English for Tertiary Studies.pdf', 'Monthly Attendance Summary - English for Tertiary Studies.pdf', '2026-03-12 15:01:31'),
+(13, 14, '1773463763_23WP12509_ChuaJianXi.GaneshaA_LBhaskaran.LeeGuanYi.YongChunHou.docx.pdf', 'ChuaJianXi.GaneshaA_LBhaskaran.LeeGuanYi.YongChunHou.docx.pdf', '2026-03-14 04:49:23'),
+(14, 14, '1773463763_23WP12509_Ganesha_Week6.pdf', 'Ganesha_Week6.pdf', '2026-03-14 04:49:23');
 
 -- --------------------------------------------------------
 
@@ -2909,7 +3230,6 @@ INSERT INTO `users` (`userID`, `role`, `password`) VALUES
 ('U048', 'Student', '$2y$10$ghvkVuAUk92vzSoxCEKD1ODrBISdd8r0PicnhAiswjERZFLCWtxwm'),
 ('U049', 'Student', '$2y$10$JTTYD703faj5AWLZpk.0vOHlxxm7c2U0StbQ8hN4Jjl.Jcl0FsBbW'),
 ('U050', 'Student', '$2y$10$5wyMwTPpLzaME/YEButPl.qIVJTO80JEDUP0LWjWeSAoeFE3Lec82'),
-('U051', 'Student', '$2y$10$IIq2EqNHDorYPAFahn5Hfed.RbPyngZRIBD3.YGthd7M8mArpZXXS'),
 ('U052', 'Student', '$2y$10$c0xgfRyK0dLe2K78T1xlYO9trlEBTo2nTBY2V6Uk4dihmVc4ZFW26'),
 ('U053', 'Staff', '$2y$10$uI.0nyIODyYCbQx5blzIJ.pRc8NuHkNRSPUPEHfHzjGW1DtlWfAkO'),
 ('U054', 'Staff', '$2y$10$IbaubCaQfDKzPPaeErEYVOpOtgXk8Y6l6J3w213IIVL7D5RIIsfDi'),
@@ -2917,9 +3237,10 @@ INSERT INTO `users` (`userID`, `role`, `password`) VALUES
 ('U056', 'Staff', '$2y$10$v4cXA.KtkiIPOm/I.FYiretPVzKbmPLBx0UD79pLeWsPY7lNN9yfi'),
 ('U057', 'Student', '$2y$10$FdeUgXn/qAGbSVkkN3IgEugpwkk2Ogvd7ojkN2e1qu.CYGCb3aV0m'),
 ('U058', 'Admin', '$2y$10$x3kAq.v4mNW7ysppQ6Bzj./3LeChA6ZosQFAzqj3dldG0ZmQjrcvW'),
-('U060', 'Student', '$2y$10$AgXoXxDVwofBCildA3M2a.CrYqBu71twvXOR9T3oAqKmZ1xBQhhU2'),
+('U060', 'Student', '$2y$10$Hi0JMwsw/wTO528ASH0DxeLW4mv92wnFpsJH0LtyM71oAxI38loMS'),
 ('U094', 'Admin', '$2y$10$DtmCAe5o3l4AdsaOohOIP.DCXt88APy9LqlqgFMivm3nusNrpzeim'),
-('U096', 'Staff', '$2y$10$J33gs81oQek7OgU1wvNm2ea6y6sGNpQyDBq19Bxf4nueGgTTBaJAi');
+('U096', 'Staff', '$2y$10$J33gs81oQek7OgU1wvNm2ea6y6sGNpQyDBq19Bxf4nueGgTTBaJAi'),
+('U097', 'Student', '$2y$10$GD.KvZNYqvo72OUbbC1he.K5kSa02ERqO0sQeKPlvQSJjhI6tACvK');
 
 --
 -- Indexes for dumped tables
@@ -2936,10 +3257,7 @@ ALTER TABLE `academic_term`
 -- Indexes for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  ADD PRIMARY KEY (`logID`),
-  ADD KEY `idx_user` (`userID`),
-  ADD KEY `idx_timestamp` (`timestamp`),
-  ADD KEY `idx_activity` (`activity_type`);
+  ADD PRIMARY KEY (`logID`);
 
 --
 -- Indexes for table `admin`
@@ -3136,227 +3454,31 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `academic_term`
 --
 ALTER TABLE `academic_term`
-  MODIFY `termID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `termID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `logID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1023;
+  MODIFY `logID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1213;
 
 --
 -- AUTO_INCREMENT for table `announcements`
 --
 ALTER TABLE `announcements`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT for table `assignments`
---
-ALTER TABLE `assignments`
-  MODIFY `assignmentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `recordID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=789;
+  MODIFY `recordID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=797;
 
 --
 -- AUTO_INCREMENT for table `attendance_sessions`
 --
 ALTER TABLE `attendance_sessions`
-  MODIFY `sessionID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=214;
-
---
--- AUTO_INCREMENT for table `booking_rules`
---
-ALTER TABLE `booking_rules`
-  MODIFY `ruleID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `class_group_removals`
---
-ALTER TABLE `class_group_removals`
-  MODIFY `removalID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `class_schedule`
---
-ALTER TABLE `class_schedule`
-  MODIFY `scheduleID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
-
---
--- AUTO_INCREMENT for table `course_offering`
---
-ALTER TABLE `course_offering`
-  MODIFY `offeringID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
-
---
--- AUTO_INCREMENT for table `course_registration`
---
-ALTER TABLE `course_registration`
-  MODIFY `registrationID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
-
---
--- AUTO_INCREMENT for table `facility_booking`
---
-ALTER TABLE `facility_booking`
-  MODIFY `bookingID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
-
---
--- AUTO_INCREMENT for table `login_attempts`
---
-ALTER TABLE `login_attempts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=163;
-
---
--- AUTO_INCREMENT for table `notifications`
---
-ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
-
---
--- AUTO_INCREMENT for table `password_resets`
---
-ALTER TABLE `password_resets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `replacement_request`
---
-ALTER TABLE `replacement_request`
-  MODIFY `replacementID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
-
---
--- AUTO_INCREMENT for table `staff_course`
---
-ALTER TABLE `staff_course`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `submissions`
---
-ALTER TABLE `submissions`
-  MODIFY `submissionID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
-
---
--- AUTO_INCREMENT for table `submission_files`
---
-ALTER TABLE `submission_files`
-  MODIFY `fileID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `academic_term`
---
-ALTER TABLE `academic_term`
-  ADD CONSTRAINT `academic_term_ibfk_1` FOREIGN KEY (`programID`) REFERENCES `program` (`programID`) ON DELETE CASCADE;
-
---
--- Constraints for table `admin`
---
-ALTER TABLE `admin`
-  ADD CONSTRAINT `admin_fk_user` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE;
-
---
--- Constraints for table `assignments`
---
-ALTER TABLE `assignments`
-  ADD CONSTRAINT `assignments_ibfk_1` FOREIGN KEY (`courseID`) REFERENCES `course` (`courseID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `assignments_ibfk_2` FOREIGN KEY (`staffID`) REFERENCES `staff` (`staffID`) ON DELETE CASCADE;
-
---
--- Constraints for table `attendance`
---
-ALTER TABLE `attendance`
-  ADD CONSTRAINT `attendance_ibfk_1` FOREIGN KEY (`studentID`) REFERENCES `student` (`studentID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `attendance_ibfk_2` FOREIGN KEY (`scheduleID`) REFERENCES `class_schedule` (`scheduleID`) ON DELETE CASCADE;
-
---
--- Constraints for table `attendance_sessions`
---
-ALTER TABLE `attendance_sessions`
-  ADD CONSTRAINT `attendance_sessions_ibfk_1` FOREIGN KEY (`scheduleID`) REFERENCES `class_schedule` (`scheduleID`) ON DELETE CASCADE;
-
---
--- Constraints for table `class_schedule`
---
-ALTER TABLE `class_schedule`
-  ADD CONSTRAINT `class_schedule_ibfk_1` FOREIGN KEY (`termID`) REFERENCES `academic_term` (`termID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_cs_course` FOREIGN KEY (`courseID`) REFERENCES `course` (`courseID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_cs_program` FOREIGN KEY (`programID`) REFERENCES `program` (`programID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_cs_staff` FOREIGN KEY (`staffID`) REFERENCES `staff` (`staffID`) ON DELETE CASCADE;
-
---
--- Constraints for table `course_offering`
---
-ALTER TABLE `course_offering`
-  ADD CONSTRAINT `course_offering_ibfk_1` FOREIGN KEY (`courseID`) REFERENCES `course` (`courseID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `course_offering_ibfk_2` FOREIGN KEY (`programID`) REFERENCES `program` (`programID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `course_offering_ibfk_3` FOREIGN KEY (`termID`) REFERENCES `academic_term` (`termID`) ON DELETE CASCADE;
-
---
--- Constraints for table `course_registration`
---
-ALTER TABLE `course_registration`
-  ADD CONSTRAINT `course_registration_ibfk_1` FOREIGN KEY (`studentID`) REFERENCES `student` (`studentID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `course_registration_ibfk_2` FOREIGN KEY (`offeringID`) REFERENCES `course_offering` (`offeringID`) ON DELETE CASCADE;
-
---
--- Constraints for table `password_resets`
---
-ALTER TABLE `password_resets`
-  ADD CONSTRAINT `fk_password_resets_user` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE;
-
---
--- Constraints for table `program_course`
---
-ALTER TABLE `program_course`
-  ADD CONSTRAINT `fk_pc_course` FOREIGN KEY (`courseID`) REFERENCES `course` (`courseID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_pc_program` FOREIGN KEY (`programID`) REFERENCES `program` (`programID`) ON DELETE CASCADE;
-
---
--- Constraints for table `replacement_request`
---
-ALTER TABLE `replacement_request`
-  ADD CONSTRAINT `replacement_request_ibfk_1` FOREIGN KEY (`scheduleID`) REFERENCES `class_schedule` (`scheduleID`) ON DELETE CASCADE;
-
---
--- Constraints for table `staff`
---
-ALTER TABLE `staff`
-  ADD CONSTRAINT `staff_fk_user` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE;
-
---
--- Constraints for table `staff_course`
---
-ALTER TABLE `staff_course`
-  ADD CONSTRAINT `staff_course_ibfk_1` FOREIGN KEY (`staffID`) REFERENCES `staff` (`staffID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `staff_course_ibfk_2` FOREIGN KEY (`courseID`) REFERENCES `course` (`courseID`) ON DELETE CASCADE;
-
---
--- Constraints for table `student`
---
-ALTER TABLE `student`
-  ADD CONSTRAINT `fk_student_program` FOREIGN KEY (`programID`) REFERENCES `program` (`programID`) ON DELETE SET NULL,
-  ADD CONSTRAINT `fk_student_user` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`) ON DELETE CASCADE;
-
---
--- Constraints for table `submissions`
---
-ALTER TABLE `submissions`
-  ADD CONSTRAINT `submissions_ibfk_1` FOREIGN KEY (`assignmentID`) REFERENCES `assignments` (`assignmentID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `submissions_ibfk_2` FOREIGN KEY (`studentID`) REFERENCES `student` (`studentID`) ON DELETE CASCADE;
-
---
--- Constraints for table `submission_files`
---
-ALTER TABLE `submission_files`
-  ADD CONSTRAINT `submission_files_ibfk_1` FOREIGN KEY (`submissionID`) REFERENCES `submissions` (`submissionID`) ON DELETE CASCADE;
+  MODIFY `sessionID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=257;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

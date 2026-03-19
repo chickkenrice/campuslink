@@ -162,6 +162,10 @@ $db = get_db_connection();
                 <h3 style="margin:0 0 15px 0; color:var(--purple-base);">
                     <i class="fa-solid fa-calendar-week"></i> Master Facility Schedule View
                 </h3>
+                <p style="margin:0 0 12px; color:#6b7280; font-size:13px;">
+                    Click a facility name in the schedule to change its status (Active, Closed, Maintenance).
+                    Closed or Maintenance facilities are automatically hidden from this view.
+                </p>
 
                 <div class="rb-admin-filters">
                     <div class="rb-form-group">
@@ -195,46 +199,27 @@ $db = get_db_connection();
                         Click <strong>View</strong> to load the facility schedule
                     </div>
                 </div>
-            </section>
 
-            <!-- Facility Status Management -->
-            <section class="card" style="margin-top: 24px;">
-                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-                    <h2><i class="fa-solid fa-toggle-on"></i> Facility Status Management</h2>
-                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                        <select id="status-type-filter" style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--gray-200);">
-                            <option value="">All Types</option>
-                        </select>
-                        <select id="status-status-filter" style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--gray-200);">
-                            <option value="">All Statuses</option>
-                            <option value="Active">Active</option>
-                            <option value="Closed">Closed</option>
-                            <option value="Maintenance">Maintenance</option>
-                        </select>
+                <div id="schedule-status-modal" style="display:none; position:fixed; inset:0; background:rgba(17,24,39,0.45); z-index:9999; align-items:center; justify-content:center;">
+                    <div style="background:#fff; width:min(420px, 92vw); border-radius:12px; box-shadow:0 18px 45px rgba(0,0,0,0.2); overflow:hidden;">
+                        <div style="padding:16px 18px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center;">
+                            <h4 style="margin:0; color:#111827; font-size:16px;"><i class="fa-solid fa-building"></i> Update Facility Status</h4>
+                            <button type="button" onclick="closeScheduleStatusModal()" style="border:none; background:none; color:#6b7280; cursor:pointer; font-size:18px;">&times;</button>
+                        </div>
+                        <div style="padding:16px 18px;">
+                            <p id="schedule-status-facility" style="margin:0 0 12px; font-weight:600; color:#111827;"></p>
+                            <label for="schedule-status-select" style="display:block; margin-bottom:8px; color:#4b5563; font-size:13px;">Status</label>
+                            <select id="schedule-status-select" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid #d1d5db;">
+                                <option value="Active">Active</option>
+                                <option value="Closed">Closed</option>
+                                <option value="Maintenance">Maintenance</option>
+                            </select>
+                        </div>
+                        <div style="padding:12px 18px 16px; display:flex; justify-content:flex-end; gap:8px; border-top:1px solid #f3f4f6;">
+                            <button type="button" onclick="closeScheduleStatusModal()" style="padding:8px 14px; border:1px solid #d1d5db; background:#fff; color:#374151; border-radius:8px; cursor:pointer;">Cancel</button>
+                            <button type="button" id="schedule-status-save-btn" onclick="saveScheduleFacilityStatus()" style="padding:8px 14px; border:none; background:#7c3aed; color:#fff; border-radius:8px; cursor:pointer; font-weight:600;">Save</button>
+                        </div>
                     </div>
-                </div>
-
-                <div class="table-container" style="overflow-x: auto;">
-                    <table id="facility-status-table" class="data-table" style="width: 100%; border-collapse: separate; border-spacing: 0;">
-                        <thead>
-                            <tr style="background: linear-gradient(135deg, #7c3aed 0%, #9333ea 100%); color: white;">
-                                <th style="padding: 16px 16px; text-align: left; font-weight: 600; border-bottom: 2px solid #6d28d9; min-width: 100px;">Facility ID</th>
-                                <th style="padding: 16px 16px; text-align: left; font-weight: 600; border-bottom: 2px solid #6d28d9; min-width: 150px;">Name</th>
-                                <th style="padding: 16px 16px; text-align: left; font-weight: 600; border-bottom: 2px solid #6d28d9; min-width: 100px;">Type</th>
-                                <th style="padding: 16px 16px; text-align: left; font-weight: 600; border-bottom: 2px solid #6d28d9; min-width: 120px;">Location</th>
-                                <th style="padding: 16px 16px; text-align: center; font-weight: 600; border-bottom: 2px solid #6d28d9; min-width: 80px;">Capacity</th>
-                                <th style="padding: 16px 16px; text-align: center; font-weight: 600; border-bottom: 2px solid #6d28d9; min-width: 140px;">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="6" style="text-align:center; padding:40px;">
-                                    <i class="fa-solid fa-spinner fa-spin" style="font-size: 24px; color: var(--purple-base);"></i>
-                                    <p style="margin: 10px 0 0; color: #6b7280;">Loading facilities...</p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
             </section>
 
@@ -245,12 +230,14 @@ $db = get_db_connection();
 
 <script src="../script.js"></script>
 <script>
+    let scheduleFacilityMap = {};
+    let selectedScheduleFacilityId = '';
+
     document.addEventListener('DOMContentLoaded', function() {
         loadFacilityTypes();
         loadAllBookings();
         loadScheduleTypes();
         loadSchedule();
-        loadFacilityStatusTable();
     });
 
     // Attach filter change events
@@ -379,13 +366,21 @@ $db = get_db_connection();
 
         try {
             let url = `../api/resource_booking.php?action=getFacilitySchedule&date=${date}`;
-            if (type) url += `&type=${type}`;
+            if (type) url += `&type=${encodeURIComponent(type)}`;
 
             const res = await fetch(url);
             const result = await res.json();
 
             if (result.success) {
-                renderScheduleTimeline(result.facilities, result.date);
+                let facilities = result.facilities || [];
+
+                // Fallback guard: enforce selected type client-side if API returns mixed types.
+                if (type) {
+                    const selectedType = type.trim().toLowerCase();
+                    facilities = facilities.filter(f => (f.type || '').trim().toLowerCase() === selectedType);
+                }
+
+                renderScheduleTimeline(facilities, result.date);
             } else {
                 container.innerHTML = `<div style="text-align:center; padding:40px; color:#dc2626;">${result.message}</div>`;
             }
@@ -397,6 +392,7 @@ $db = get_db_connection();
 
     function renderScheduleTimeline(facilities, date) {
         const container = document.getElementById('schedule-container');
+        scheduleFacilityMap = {};
 
         if (!facilities || facilities.length === 0) {
             container.innerHTML = '<div style="text-align:center; padding:40px; color:var(--text-sub);">No facilities found</div>';
@@ -427,8 +423,15 @@ $db = get_db_connection();
         // Build rows
         let rowsHTML = '';
         facilities.forEach(f => {
+            scheduleFacilityMap[f.facilityID] = f;
             const opS = parseInt((f.operatingStart || '08:00:00').substring(0, 2));
             const opE = parseInt((f.operatingEnd || '22:00:00').substring(0, 2));
+            const statusLabel = (f.status || 'Active');
+            const statusColor = statusLabel === 'Closed'
+                ? '#dc2626'
+                : statusLabel === 'Maintenance'
+                    ? '#d97706'
+                    : '#10b981';
 
             // Build event blocks
             let blocksHTML = '';
@@ -468,8 +471,10 @@ $db = get_db_connection();
             rowsHTML += `
                 <div class="sched-row">
                     <div class="sched-label-cell">
-                        <strong>${f.facilityName}</strong>
-                        <small>${f.type}</small>
+                        <button type="button" onclick="openScheduleStatusModal('${f.facilityID}')" style="all:unset; cursor:pointer; display:block; font-weight:700; color:#111827;">
+                            ${f.facilityName}
+                        </button>
+                        <small>${f.type} • <span style="font-weight:600; color:${statusColor};">${statusLabel}</span></small>
                     </div>
                     <div class="sched-track">
                         ${shadingHTML}
@@ -485,123 +490,42 @@ $db = get_db_connection();
                 <div class="sched-body">${rowsHTML}</div>
             </div>`;
     }
+    function openScheduleStatusModal(facilityID) {
+        const facility = scheduleFacilityMap[facilityID];
+        if (!facility) return;
 
-    // ================================================================
-    // Facility Status Management
-    // ================================================================
+        selectedScheduleFacilityId = facilityID;
+        document.getElementById('schedule-status-facility').textContent = `${facility.facilityName} (${facility.facilityID})`;
+        document.getElementById('schedule-status-select').value = facility.status || 'Active';
+        document.getElementById('schedule-status-modal').style.display = 'flex';
+    }
 
-    // Attach filter change events for status management
-    ['status-type-filter', 'status-status-filter'].forEach(id => {
-        document.getElementById(id)?.addEventListener('change', loadFacilityStatusTable);
-    });
+    function closeScheduleStatusModal() {
+        selectedScheduleFacilityId = '';
+        document.getElementById('schedule-status-modal').style.display = 'none';
+    }
 
-    async function loadFacilityStatusTable() {
-        const typeFilter = document.getElementById('status-type-filter').value;
-        const statusFilter = document.getElementById('status-status-filter').value;
-        const tbody = document.querySelector('#facility-status-table tbody');
+    async function saveScheduleFacilityStatus() {
+        if (!selectedScheduleFacilityId) return;
 
-        tbody.innerHTML = `<tr>
-            <td colspan="6" style="text-align:center; padding:40px;">
-                <i class="fa-solid fa-spinner fa-spin" style="font-size: 24px; color: var(--purple-base);"></i>
-                <p style="margin: 10px 0 0; color: #6b7280;">Loading facilities...</p>
-            </td>
-        </tr>`;
+        const saveBtn = document.getElementById('schedule-status-save-btn');
+        const newStatus = document.getElementById('schedule-status-select').value;
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
 
         try {
-            let url = `../api/resource_booking.php?action=getAllFacilities`;
-            if (typeFilter) url += `&type=${encodeURIComponent(typeFilter)}`;
-            if (statusFilter) url += `&status=${encodeURIComponent(statusFilter)}`;
-
-            const res = await fetch(url);
-            const result = await res.json();
-
-            if (result.success) {
-                renderFacilityStatusTable(result.data);
-                populateStatusTypeFilter(result.types);
-            } else {
-                tbody.innerHTML = `<tr>
-                    <td colspan="6" style="text-align:center; padding:40px; background: #fef2f2;">
-                        <i class="fa-solid fa-exclamation-circle" style="font-size: 32px; color: #dc2626; margin-bottom: 10px;"></i>
-                        <p style="margin: 0; color: #dc2626;">${result.message}</p>
-                    </td>
-                </tr>`;
+            const ok = await updateFacilityStatus(selectedScheduleFacilityId, newStatus);
+            if (ok) {
+                closeScheduleStatusModal();
+                await loadSchedule();
             }
-        } catch (e) {
-            console.error(e);
-            tbody.innerHTML = `<tr>
-                <td colspan="6" style="text-align:center; padding:40px; background: #fef2f2;">
-                    <i class="fa-solid fa-exclamation-triangle" style="font-size: 32px; color: #dc2626; margin-bottom: 10px;"></i>
-                    <p style="margin: 0; color: #dc2626;">Error loading facilities</p>
-                </td>
-            </tr>`;
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save';
         }
     }
 
-    function populateStatusTypeFilter(types) {
-        const select = document.getElementById('status-type-filter');
-        const currentVal = select.value;
-        // Clear existing options except first
-        select.innerHTML = '<option value="">All Types</option>';
-        types.forEach(t => {
-            const opt = document.createElement('option');
-            opt.value = t;
-            opt.textContent = t;
-            if (t === currentVal) opt.selected = true;
-            select.appendChild(opt);
-        });
-    }
-
-    function renderFacilityStatusTable(facilities) {
-        const tbody = document.querySelector('#facility-status-table tbody');
-
-        if (facilities.length === 0) {
-            tbody.innerHTML = `<tr>
-                <td colspan="6" style="text-align:center; padding:40px; background: #f9fafb;">
-                    <i class="fa-solid fa-building" style="font-size: 32px; color: #9ca3af; margin-bottom: 10px;"></i>
-                    <p style="margin: 0; color: #6b7280;">No facilities found</p>
-                </td>
-            </tr>`;
-            return;
-        }
-
-        let html = '';
-        facilities.forEach((f, i) => {
-            const bgColor = i % 2 === 0 ? '#ffffff' : '#f9fafb';
-            const statusColors = {
-                'Active': { bg: '#d1fae5', color: '#065f46' },
-                'Closed': { bg: '#fee2e2', color: '#991b1b' },
-                'Maintenance': { bg: '#fef3c7', color: '#92400e' }
-            };
-            const statusStyle = statusColors[f.status] || { bg: '#e5e7eb', color: '#374151' };
-
-            html += `<tr style="background: ${bgColor};">
-                <td style="padding: 16px; border-bottom: 1px solid #e5e7eb; font-family: monospace;">${f.facilityID}</td>
-                <td style="padding: 16px; border-bottom: 1px solid #e5e7eb; font-weight: 500;">${f.facilityName}</td>
-                <td style="padding: 16px; border-bottom: 1px solid #e5e7eb;">${f.type}</td>
-                <td style="padding: 16px; border-bottom: 1px solid #e5e7eb;">${f.location}</td>
-                <td style="padding: 16px; border-bottom: 1px solid #e5e7eb; text-align: center;">${f.capacity}</td>
-                <td style="padding: 16px; border-bottom: 1px solid #e5e7eb; text-align: center;">
-                    <select onchange="updateFacilityStatus('${f.facilityID}', this.value, this)" 
-                            style="padding: 8px 16px; border-radius: 20px; border: none; font-weight: 600; cursor: pointer;
-                                   background: ${statusStyle.bg}; color: ${statusStyle.color};">
-                        <option value="Active" ${f.status === 'Active' ? 'selected' : ''} style="background: #d1fae5; color: #065f46;">Active</option>
-                        <option value="Closed" ${f.status === 'Closed' ? 'selected' : ''} style="background: #fee2e2; color: #991b1b;">Closed</option>
-                        <option value="Maintenance" ${f.status === 'Maintenance' ? 'selected' : ''} style="background: #fef3c7; color: #92400e;">Maintenance</option>
-                    </select>
-                </td>
-            </tr>`;
-        });
-
-        tbody.innerHTML = html;
-    }
-
-    async function updateFacilityStatus(facilityID, newStatus, selectElement) {
-        const statusColors = {
-            'Active': { bg: '#d1fae5', color: '#065f46' },
-            'Closed': { bg: '#fee2e2', color: '#991b1b' },
-            'Maintenance': { bg: '#fef3c7', color: '#92400e' }
-        };
-
+    async function updateFacilityStatus(facilityID, newStatus) {
         try {
             const res = await fetch('../api/resource_booking.php', {
                 method: 'POST',
@@ -616,22 +540,16 @@ $db = get_db_connection();
             const result = await res.json();
 
             if (result.success) {
-                // Update the select styling
-                const style = statusColors[newStatus] || { bg: '#e5e7eb', color: '#374151' };
-                selectElement.style.background = style.bg;
-                selectElement.style.color = style.color;
-
-                // Show success toast
                 showStatusToast('Status updated successfully', 'success');
+                return true;
             } else {
                 showStatusToast(result.message || 'Failed to update status', 'error');
-                // Reload to reset
-                loadFacilityStatusTable();
+                return false;
             }
         } catch (e) {
             console.error(e);
             showStatusToast('Error updating status', 'error');
-            loadFacilityStatusTable();
+            return false;
         }
     }
 

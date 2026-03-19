@@ -278,7 +278,6 @@ while ($row = $activityTypesResult->fetch_assoc()) {
                                     <?php endif; ?>
                                     <th style="width: 120px;">Activity Type</th>
                                     <th>Description</th>
-                                    <th style="width: 80px;">Details</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -327,20 +326,11 @@ while ($row = $activityTypesResult->fetch_assoc()) {
                                                 </span>
                                             </td>
                                             <td><?php echo htmlspecialchars($log['activity_description']); ?></td>
-                                            <td>
-                                                <?php if ($log['details']): ?>
-                                                    <button class="details-btn" onclick='showDetails(<?php echo json_encode($log['details']); ?>)'>
-                                                        <i class="fa-solid fa-eye"></i> View
-                                                    </button>
-                                                <?php else: ?>
-                                                    <span style="color: #ccc; font-size: 12px;">—</span>
-                                                <?php endif; ?>
-                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="<?php echo $activeTab === 'all' ? '7' : '6'; ?>">
+                                        <td colspan="<?php echo $activeTab === 'all' ? '6' : '5'; ?>">
                                             <div class="no-data">
                                                 <div><i class="fa-solid fa-inbox"></i></div>
                                                 <div style="font-weight: 600; font-size: 16px; margin-bottom: 5px;">No Activity Logs Found</div>
@@ -408,47 +398,12 @@ while ($row = $activityTypesResult->fetch_assoc()) {
         </div>
     </div>
 
-    <!-- Details Modal -->
-    <div id="detailsModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeDetailsModal()">&times;</span>
-            <h2 style="margin-top: 0; color: #8056ff;">
-                <i class="fa-solid fa-info-circle"></i> Activity Details
-            </h2>
-            <pre id="detailsContent" style="background: #f9f9f9; padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.6;"></pre>
-        </div>
-    </div>
-
     <script>
-        const detailsModal = document.getElementById('detailsModal');
-        
-        function showDetails(details) {
-            const content = document.getElementById('detailsContent');
-            try {
-                const parsed = JSON.parse(details);
-                content.textContent = JSON.stringify(parsed, null, 2);
-            } catch (e) {
-                content.textContent = details;
-            }
-            detailsModal.classList.add('open');
-        }
-        
-        function closeDetailsModal() {
-            detailsModal.classList.remove('open');
-        }
-        
         function exportLogs() {
             const params = new URLSearchParams(window.location.search);
             params.set('export', 'csv');
             window.location.href = '?' + params.toString();
         }
-        
-        // Close modal when clicking outside
-        detailsModal.addEventListener('click', function(e) {
-            if (e.target === detailsModal) {
-                closeDetailsModal();
-            }
-        });
     </script>
 </body>
 </html>

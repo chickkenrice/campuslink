@@ -67,6 +67,10 @@ define('DB_NAME', 'campuslink');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 
+// Allowed WiFi IP for student attendance (update to university static IP when hosted)
+// Students must be connected to this network to take attendance
+define('ALLOWED_WIFI_IP', '113.211.106.7');
+
 function get_db_connection(): mysqli {
 	$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 	if ($mysqli->connect_errno) {

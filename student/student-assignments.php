@@ -298,6 +298,7 @@ function renderGrid($list, $limit = null, $gridId = '', $archivedIds = []) {
         .toggle-switch input:checked + .toggle-slider::before { transform: translateX(18px); }
         .archive-label { font-size: 12px; color: #6b7280; font-weight: 600; }
         .archive-count { font-size: 11px; color: #9ca3af; background: #f3f4f6; padding: 2px 8px; border-radius: 10px; }
+        .archive-toggle.disabled { opacity: 0.45; pointer-events: none; }
         
         /* Load More Button */
         .load-more-btn {
@@ -473,16 +474,14 @@ function renderGrid($list, $limit = null, $gridId = '', $archivedIds = []) {
                     <button class="filter-btn" onclick="filterGrid(event, 'graded')">Graded (<?php echo count($listGraded); ?>)</button>
                     
                     <!-- Archive Toggle -->
-                    <?php if ($totalArchived > 0): ?>
-                    <div class="archive-toggle">
+                    <div class="archive-toggle<?php echo $totalArchived === 0 ? ' disabled' : ''; ?>">
                         <label class="toggle-switch">
-                            <input type="checkbox" id="archiveToggle" onchange="toggleArchive(this.checked)" <?php echo $showArchived ? 'checked' : ''; ?>>
+                            <input type="checkbox" id="archiveToggle" onchange="toggleArchive(this.checked)" <?php echo $showArchived ? 'checked' : ''; ?> <?php echo $totalArchived === 0 ? 'disabled' : ''; ?>>
                             <span class="toggle-slider"></span>
                         </label>
                         <span class="archive-label">Show Archived</span>
                         <span class="archive-count"><?php echo $totalArchived; ?></span>
                     </div>
-                    <?php endif; ?>
                 </div>
 
                 <div id="grid-all" class="assign-grid">

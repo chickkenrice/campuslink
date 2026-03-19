@@ -585,10 +585,8 @@ prevent_back_button_cache();
     }
 
     async function loadMyBookings() {
-        const statusFilter = document.getElementById('booking-status-filter')?.value || '';
         try {
-            let url = `../api/resource_booking.php?action=getMyBookings`;
-            if (statusFilter) url += `&status=${statusFilter}`;
+            const url = `../api/resource_booking.php?action=getMyBookings`;
 
             const res = await fetch(url);
             const result = await res.json();
@@ -601,11 +599,57 @@ prevent_back_button_cache();
         }
     }
 
+    function renderFacilityStatusTag(status, compact = false) {
+        const normalized = String(status || 'Active').toLowerCase();
+        let label = 'Active';
+        let color = '#166534';
+        let bg = '#dcfce7';
+        let border = '#86efac';
+
+        if (normalized === 'maintenance') {
+            label = 'Maintenance';
+            color = '#92400e';
+            bg = '#fef3c7';
+            border = '#fcd34d';
+        } else if (normalized === 'closed') {
+            label = 'Closed';
+            color = '#991b1b';
+            bg = '#fee2e2';
+            border = '#fca5a5';
+        }
+
+        const padding = compact ? '1px 6px' : '2px 8px';
+        const fontSize = compact ? '10px' : '11px';
+        return `<span style="display:inline-block; padding:${padding}; border-radius:999px; font-size:${fontSize}; font-weight:700; color:${color}; background:${bg}; border:1px solid ${border}; text-transform:uppercase; letter-spacing:0.2px;">${label}</span>`;
+    }
+
     function renderMyBookings(bookings) {
         const tbody = document.querySelector('#my-bookings-table tbody');
+        const selectedStatusFilter = document.getElementById('booking-status-filter')?.value || '';
+        const now = new Date();
+        const todayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+        const normalizedBookings = bookings.map(b => {
+            let computedStatus = b.status || 'Active';
+            if (computedStatus !== 'Cancelled') {
+                const bookingDateObj = new Date(`${b.bookingDate}T00:00:00`);
+                const bookingEndedToday = bookingDateObj.getTime() === todayDate.getTime() && String(b.endTime || '').substring(0, 5) <= currentTime;
+                if (bookingDateObj < todayDate || bookingEndedToday) {
+                    computedStatus = 'Completed';
+                } else {
+                    computedStatus = 'Active';
+                }
+            }
+            return { ...b, computedStatus };
+        });
+
+        const visibleBookings = selectedStatusFilter
+            ? normalizedBookings.filter(b => b.computedStatus === selectedStatusFilter)
+            : normalizedBookings;
 
         // Count active bookings for badge
-        const activeCount = bookings.filter(b => b.status === 'Active').length;
+        const activeCount = normalizedBookings.filter(b => b.computedStatus === 'Active').length;
         const badge = document.getElementById('active-booking-badge');
         if (activeCount > 0) {
             badge.textContent = activeCount;
@@ -614,20 +658,22 @@ prevent_back_button_cache();
             badge.style.display = 'none';
         }
 
-        if (bookings.length === 0) {
+        if (visibleBookings.length === 0) {
             tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-sub);">No bookings found</td></tr>';
             return;
         }
 
-        tbody.innerHTML = bookings.map(b => {
-            const statusClass = b.status === 'Active' ? 'status-active' : b.status === 'Completed' ? 'status-completed' : 'status-cancelled';
-            const canCancel = b.status === 'Active' && b.bookingDate >= '<?php echo date("Y-m-d"); ?>';
+        tbody.innerHTML = visibleBookings.map(b => {
+            const statusClass = b.computedStatus === 'Active' ? 'status-active' : b.computedStatus === 'Completed' ? 'status-completed' : 'status-cancelled';
+            const canCancel = b.computedStatus === 'Active';
+            const facilityStatus = b.facilityStatus || 'Active';
+            const facilityStatusTag = renderFacilityStatusTag(facilityStatus);
             const formattedDate = b.bookingDate.split('-').reverse().join('-');
             return `<tr style="border-bottom:1px solid #f0f0f0;">
-                <td style="padding:12px;"><strong>${b.facilityName}</strong><br><small style="color:var(--text-sub);">${b.type} &bull; ${b.location}</small></td>
+                <td style="padding:12px;"><strong>${b.facilityName}</strong><br><small style="color:var(--text-sub);">${b.type} &bull; ${b.location} &bull; ${facilityStatusTag}</small></td>
                 <td style="padding:12px; text-align:center;">${formattedDate}</td>
                 <td style="padding:12px; text-align:center; font-weight:600;">${b.startTime.substring(0,5)} - ${b.endTime.substring(0,5)}</td>
-                <td style="padding:12px; text-align:center;"><span class="rb-status ${statusClass}">${b.status}</span></td>
+                <td style="padding:12px; text-align:center;"><span class="rb-status ${statusClass}">${b.computedStatus}</span></td>
                 <td style="padding:12px; text-align:center;">${canCancel ? `<button class="rb-btn-cancel" onclick="cancelBooking(${b.bookingID})"><i class="fa-solid fa-xmark"></i> Cancel</button>` : '-'}</td>
             </tr>`;
         }).join('');
@@ -787,7 +833,7 @@ prevent_back_button_cache();
                 <div class="sched-row">
                     <div class="sched-label-cell">
                         <strong>${f.facilityName}</strong>
-                        <small>${f.type}</small>
+                        <small>${f.type} &bull; ${renderFacilityStatusTag((f.status || 'Active'), true)}</small>
                     </div>
                     <div class="sched-track">
                         ${shadingHTML}

@@ -215,12 +215,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // --- UPDATE USER ---
     elseif ($action === 'update') {
-        $id = $_POST['id']; 
-        $role = $_POST['role'];
-        $name = $_POST['name'];
-        $email = $_POST['email'];
+        $id = $_POST['id'] ?? '';
+        $role = $_POST['role'] ?? '';
+        $name = $_POST['name'] ?? '';
+        $email = $_POST['email'] ?? '';
         $extra = $_POST['extra'] ?? '';
         $group = $_POST['group'] ?? '';
+
+        if ($id === '' || $role === '') {
+            $message = "Error updating user: Missing required user identifier or role.";
+        } else {
 
         // Duplicate email check (exclude current user)
         $dupEmail = false;
@@ -263,6 +267,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = "User details updated successfully.";
         } else {
             $message = "Error updating user.";
+        }
         }
     }
 }
@@ -382,8 +387,15 @@ $tutGroups = $db->query("SELECT DISTINCT tutGroup FROM student WHERE tutGroup IS
 
                 <section class="announcements-card" style="margin-top: 20px;">
                     <?php if($message): ?>
-                        <div style="background: #d4edda; color: #155724; padding: 12px; border-radius: 12px; margin-bottom: 20px; font-size:14px; border: 1px solid #c3e6cb;">
-                            <i class="fa-solid fa-check-circle"></i> <?php echo $message; ?>
+                        <?php
+                            $isErrorMessage = stripos($message, 'Error') === 0;
+                            $alertBg = $isErrorMessage ? '#f8d7da' : '#d4edda';
+                            $alertColor = $isErrorMessage ? '#721c24' : '#155724';
+                            $alertBorder = $isErrorMessage ? '#f5c6cb' : '#c3e6cb';
+                            $alertIcon = $isErrorMessage ? 'fa-circle-exclamation' : 'fa-check-circle';
+                        ?>
+                        <div style="background: <?php echo $alertBg; ?>; color: <?php echo $alertColor; ?>; padding: 12px; border-radius: 12px; margin-bottom: 20px; font-size:14px; border: 1px solid <?php echo $alertBorder; ?>;">
+                            <i class="fa-solid <?php echo $alertIcon; ?>"></i> <?php echo htmlspecialchars($message); ?>
                         </div>
                     <?php endif; ?>
                     
@@ -698,19 +710,16 @@ $tutGroups = $db->query("SELECT DISTINCT tutGroup FROM student WHERE tutGroup IS
             
             <form method="POST" onsubmit="return validateEditForm()" novalidate>
                 <input type="hidden" name="action" id="formAction" value="update">
+                <input type="hidden" name="id" id="inpId">
+                <input type="hidden" name="role" id="inpRoleHidden">
                 
                 <div class="form-row">
                     <label>Role</label>
-                    <select name="role" id="inpRole" disabled style="background: #eee;">
+                    <select id="inpRole" disabled style="background: #eee;">
                         <option value="Student">Student</option>
                         <option value="Staff">Staff</option>
                         <option value="Admin">Admin</option>
                     </select>
-                </div>
-
-                <div class="form-row">
-                    <label>User ID</label>
-                    <input type="text" name="id" id="inpId" readonly style="background: #eee;">
                 </div>
 
                 <div class="form-row">
@@ -1073,6 +1082,7 @@ $tutGroups = $db->query("SELECT DISTINCT tutGroup FROM student WHERE tutGroup IS
             
             const roleSelect = document.getElementById('inpRole');
             roleSelect.value = data.role;
+            document.getElementById('inpRoleHidden').value = data.role || '';
             
             document.getElementById('inpName').value = data.name;
             document.getElementById('inpEmail').value = data.email;

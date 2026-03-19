@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $emailBody = "
             <html>
             <head>
-    <link rel="icon" type="image/png" href="favicon2.png">
+            <link rel='icon' type='image/png' href='favicon2.png'>
                 <style>
                     body { font-family: 'Inter', Arial, sans-serif; background: #f7f4ff; padding: 20px; }
                     .container { max-width: 500px; margin: 0 auto; background: #fff; border-radius: 16px; padding: 40px; box-shadow: 0 4px 20px rgba(128,86,255,0.1); }
